@@ -13,7 +13,7 @@ import java.util.*;
 
 @Component
 @Slf4j
-public class UserRepositoryImpl implements UserRepository{
+public class UserRepositoryImpl implements UserRepository {
 
     private final Map<Long, UserDto> users = new HashMap<>();
 
@@ -71,7 +71,7 @@ public class UserRepositoryImpl implements UserRepository{
     private boolean userValidation(User user) {
         boolean isValidated = true;
 
-        if(user.getEmail() == null) {
+        if (user.getEmail() == null) {
             isValidated = false;
             log.warn("Email не может быть null");
         }

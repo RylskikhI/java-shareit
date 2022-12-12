@@ -7,9 +7,14 @@ import java.util.List;
 
 public interface ItemRepository {
     List<Item> findByUserId(long userId);
+
     Item save(long userId, ItemDto itemDto);
+
     void deleteByUserIdAndItemId(long userId, long itemId);
+
     Item update(long userId, long itemId, Item item);
+
     Item getById(Long itemId);
+
     List<Item> searchItem(String text);
 }
