@@ -11,8 +11,11 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "bookings")
-@Getter @Setter @ToString
-@AllArgsConstructor @NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 @StartDateBeforeEndDate
 public class Booking {
     @Id
@@ -30,7 +33,7 @@ public class Booking {
     private BookingStatus status;
 
     @ManyToOne
-    @JoinColumn(name="item_id")
+    @JoinColumn(name = "item_id")
     private Item item;
 
     @ManyToOne
