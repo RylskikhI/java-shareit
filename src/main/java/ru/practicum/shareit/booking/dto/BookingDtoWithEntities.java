@@ -3,18 +3,21 @@ package ru.practicum.shareit.booking.dto;
 import lombok.*;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.validator.EndDateShouldBeAfterStartDate;
-
+import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.dto.BookerDto;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-@Getter @Setter @ToString
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @EndDateShouldBeAfterStartDate
-public class BookingDto {
+public class BookingDtoWithEntities {
     private Long id;
     @FutureOrPresent
     @NotNull
@@ -22,8 +25,10 @@ public class BookingDto {
     @Future
     @NotNull
     private LocalDateTime end;
+    @NotNull
     private BookingStatus status;
     @NotNull
-    private Long itemId;
-    private Long bookerId;
+    private Item item;
+    @NotNull
+    private BookerDto booker;
 }
