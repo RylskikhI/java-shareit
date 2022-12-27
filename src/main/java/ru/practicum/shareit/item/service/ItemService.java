@@ -8,17 +8,59 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.List;
 
 public interface ItemService {
+
+    /**
+     * Добавление новой вещи.
+     * @param itemDto Entity dto.
+     * @param id User id, владелец(owner) вещи.
+     * @return ItemDto.
+     */
     ItemDto addNewItem(Long id, ItemDto itemDto);
 
+    /**
+     * Найти все вещи пользователя по id.
+     * @param userId User id, владелец(owner) вещи.
+     * @return List<ItemDto>.
+     */
     List<ItemDto> getItems(long userId);
 
+    /**
+     * Удалить вещь по id. Только владелец(owner) может сделать это.
+     * @param userId User id, владелец(owner) вещи.
+     * @param itemId Item id.
+     */
     void deleteItem(long userId, long itemId);
 
+    /**
+     * Обновить вещь по id. Только владелец(owner) может сделать это.
+     * @param item Entity dto.
+     * @param userId User id, владелец(owner) вещи.
+     * @param itemId Item id.
+     * @return ItemDto.
+     */
     ItemDto updateItem(long userId, long itemId, Item item);
 
+    /**
+     * Найти вещь по id.
+     * @param userId User id, владелец(owner) вещи.
+     * @param itemId Item id.
+     * @return ItemDto.
+     */
     ItemDto getItemById(Long userId, Long itemId);
 
+    /**
+     * Поиск вещей по ключевому слову.
+     * @param text ключевое слово.
+     * @return List<Item>.
+     */
     List<Item> searchItem(String text);
 
+    /**
+     * Добавить комментарий после бронирования.
+     * @param commentDto Entity dto.
+     * @param userId User id.
+     * @param id Comment id.
+     * @return CommentWithInfoDto.
+     */
     CommentWithInfoDto addComment(CommentDto commentDto, Long userId, Long id);
 }

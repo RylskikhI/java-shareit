@@ -43,107 +43,107 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     @Override
     public BookingDtoWithEntities createBooking(Long userId, BookingDto bookingDto) {
-        final User userWrap = userRepository.findById(userId).orElseThrow(
-                () -> new EntityNotFoundException(String.format("User with id=%d not found!", userId))
+        final User user = userRepository.findById(userId).orElseThrow(
+                () -> new EntityNotFoundException(String.format("Пользователь с id=%d не найден!", userId))
         );
-        final Item itemWrap = itemRepository.findById(bookingDto.getItemId()).orElseThrow(
-                () -> new ItemNotFoundException(String.format("Item with id=%d not found!", bookingDto.getItemId()))
+        final Item item = itemRepository.findById(bookingDto.getItemId()).orElseThrow(
+                () -> new ItemNotFoundException(String.format("Вещь с id=%d не найдена!", bookingDto.getItemId()))
         );
-        if (itemWrap.getOwner().getId().equals(userWrap.getId())) {
-            throw new UserNotFoundException(String.format("User userId=%d is the owner of the item!", userId));
+        if (item.getOwner().getId().equals(user.getId())) {
+            throw new UserNotFoundException(String.format("Пользователь с userId=%d является владельцем данной вещи!", userId));
         }
-        if (!itemWrap.getAvailable()) {
-            throw new BookingStatusException(String.format("Item available=%b, booking rejected!", itemWrap.getAvailable()));
+        if (!item.getAvailable()) {
+            throw new BookingStatusException(String.format("Вещь available=%b, бронирование отклонено!", item.getAvailable()));
         }
-        final Booking booking = BookingMapper.mapToBooking(bookingDto, BookingStatus.WAITING, itemWrap, userWrap);
-        final Booking bookingWrap = bookingRepository.save(booking);
-        return BookingMapper.mapToBookingDtoWithEntities(bookingWrap);
+        final Booking booking = BookingMapper.mapToBooking(bookingDto, BookingStatus.WAITING, item, user);
+        final Booking bookingToSave = bookingRepository.save(booking);
+        return BookingMapper.mapToBookingDtoWithEntities(bookingToSave);
     }
 
     @Override
-    public BookingDtoWithEntities findById(Long userId, Long id) {
-        final User userWrap = userRepository.findById(userId).orElseThrow(
-                () -> new UserNotFoundException(String.format("User with id=%d not found!", userId))
+    public BookingDtoWithEntities findBookingById(Long userId, Long id) {
+        final User user = userRepository.findById(userId).orElseThrow(
+                () -> new UserNotFoundException(String.format("Пользователь с id=%d не найден!", userId))
         );
-        final Booking bookingWrap = bookingRepository.findById(id).orElseThrow(
-                () -> new BookingNotFoundException(String.format("Booking with id=%d not found!", id))
+        final Booking booking = bookingRepository.findById(id).orElseThrow(
+                () -> new BookingNotFoundException(String.format("Бронирование с id=%d не найдено!", id))
         );
-        final User booker = bookingWrap.getBooker();
-        final User owner = bookingWrap.getItem().getOwner();
+        final User booker = booking.getBooker();
+        final User owner = booking.getItem().getOwner();
 
-        if (booker.getId().equals(userWrap.getId()) || owner.getId().equals(userWrap.getId())) {
-            return BookingMapper.mapToBookingDtoWithEntities(bookingWrap);
+        if (booker.getId().equals(user.getId()) || owner.getId().equals(user.getId())) {
+            return BookingMapper.mapToBookingDtoWithEntities(booking);
         }
-        throw new UserNotFoundException(String.format("User with id=%d does not have the right to request extraction!", userId));
+        throw new UserNotFoundException(String.format("Пользователь с id=%d не имеет прав на осуществление данного запроса!", userId));
     }
 
     @Override
     public List<BookingDtoWithEntities> findAllByBookerId(Long userId, String state) {
-        final User userWrap = userRepository.findById(userId).orElseThrow(
-                () -> new EntityNotFoundException(String.format("User with id=%d not found!", userId))
+        final User user = userRepository.findById(userId).orElseThrow(
+                () -> new EntityNotFoundException(String.format("Пользователь с id=%d не найден!", userId))
         );
         final BookingState bookingState = BookingState.from(state);
         if (bookingState == null) {
             throw new BookingStateExistsException("Unknown state: UNSUPPORTED_STATUS");
         }
-        List<Booking> bookings = bookingRepository.findAllByBookerId(userWrap.getId(), Sort.by(Sort.Direction.DESC, "start"));
+        List<Booking> bookings = bookingRepository.findAllByBookerId(user.getId(), Sort.by(Sort.Direction.DESC, "start"));
         return findAllByState(bookingState, bookings);
     }
 
     @Override
     public List<BookingDtoWithEntities> findAllByItemOwnerId(Long userId, String state) {
-        final User userWrap = userRepository.findById(userId).orElseThrow(
-                () -> new EntityNotFoundException(String.format("User with id=%d not found!", userId))
+        final User user = userRepository.findById(userId).orElseThrow(
+                () -> new EntityNotFoundException(String.format("Пользователь с id=%d не найден!", userId))
         );
         final BookingState bookingState = BookingState.from(state);
         if (bookingState == null) {
             throw new BookingStateExistsException("Unknown state: UNSUPPORTED_STATUS");
         }
-        List<Booking> bookings = bookingRepository.findAllByItemOwnerId(userWrap.getId(), Sort.by(Sort.Direction.DESC, "start"));
+        List<Booking> bookings = bookingRepository.findAllByItemOwnerId(user.getId(), Sort.by(Sort.Direction.DESC, "start"));
         return findAllByState(bookingState, bookings);
     }
 
     @Override
     @Transactional
-    public BookingDtoWithEntities update(Long userId, Long id, String approved) {
-        final User userWrap = userRepository.findById(userId).orElseThrow(
-                () -> new EntityNotFoundException(String.format("User with id=%d not found!", userId))
+    public BookingDtoWithEntities updateBooking(Long userId, Long id, String approved) {
+        final User user = userRepository.findById(userId).orElseThrow(
+                () -> new EntityNotFoundException(String.format("Пользователь с id=%d не найден!", userId))
         );
-        final Booking bookingWrap = bookingRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException(String.format("Booking with id=%d not found!", id))
+        final Booking booking = bookingRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(String.format("Бронирование с id=%d не найдено!", id))
         );
-        final Item itemWrap = itemRepository.findById(bookingWrap.getItem().getId()).orElseThrow(
-                () -> new EntityNotFoundException(String.format("Item with id=%d not found!", bookingWrap.getItem().getId()))
+        final Item item = itemRepository.findById(booking.getItem().getId()).orElseThrow(
+                () -> new EntityNotFoundException(String.format("Вещь с id=%d не найдена!", booking.getItem().getId()))
         );
-        if (!itemWrap.getOwner().getId().equals(userWrap.getId())) {
-            throw new UserNotFoundException(String.format("User userId=%d is not the owner of the item!", userId));
+        if (!item.getOwner().getId().equals(user.getId())) {
+            throw new UserNotFoundException(String.format("Пользователь с userId=%d не является владельцем данной вещи!", userId));
         }
-        if (Boolean.parseBoolean(approved) && bookingWrap.getStatus() == BookingStatus.WAITING) {
-            bookingWrap.setStatus(BookingStatus.APPROVED);
-        } else if (bookingWrap.getStatus() == BookingStatus.WAITING) {
-            bookingWrap.setStatus(BookingStatus.REJECTED);
+        if (Boolean.parseBoolean(approved) && booking.getStatus() == BookingStatus.WAITING) {
+            booking.setStatus(BookingStatus.APPROVED);
+        } else if (booking.getStatus() == BookingStatus.WAITING) {
+            booking.setStatus(BookingStatus.REJECTED);
         } else {
-            throw new BookingStatusException(String.format("Booking status=%s!", bookingWrap.getStatus()));
+            throw new BookingStatusException(String.format("Статус бронирования=%s!", booking.getStatus()));
         }
-        bookingRepository.save(bookingWrap);
-        return BookingMapper.mapToBookingDtoWithEntities(bookingWrap);
+        bookingRepository.save(booking);
+        return BookingMapper.mapToBookingDtoWithEntities(booking);
     }
 
     @Override
     @Transactional
-    public void deleteById(Long userId, Long id) {
-        final User userWrap = userRepository.findById(userId).orElseThrow(
-                () -> new EntityNotFoundException(String.format("User with id=%d not found!", userId))
+    public void deleteBookingById(Long userId, Long id) {
+        final User user = userRepository.findById(userId).orElseThrow(
+                () -> new EntityNotFoundException(String.format("Пользователь с id=%d не найден!", userId))
         );
-        final Booking bookingWrap = bookingRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException(String.format("Booking with id=%d not found!", id))
+        final Booking booking = bookingRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(String.format("Бронирование с id=%d не найдено!", id))
         );
-        final User booker = bookingWrap.getBooker();
-        final Long owner = bookingWrap.getItem().getOwner().getId();
-        if (booker.getId().equals(userWrap.getId()) || owner.equals(userWrap.getId())) {
-            bookingRepository.deleteById(bookingWrap.getId());
+        final User booker = booking.getBooker();
+        final Long owner = booking.getItem().getOwner().getId();
+        if (booker.getId().equals(user.getId()) || owner.equals(user.getId())) {
+            bookingRepository.deleteById(booking.getId());
         } else {
-            throw new EntityNotFoundException(String.format("User with id=%d does not have the right to request deletion!", userId));
+            throw new EntityNotFoundException(String.format("Пользователь с id=%d не имеет права на удаление!", userId));
         }
     }
 

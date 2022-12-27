@@ -27,9 +27,8 @@ public class BookingController {
     }
 
     @GetMapping("/{id}")
-    public BookingDtoWithEntities findById(@RequestHeader("X-Sharer-User-Id") Long userId,
-                               @PathVariable Long id) {
-        return bookingService.findById(userId, id);
+    public BookingDtoWithEntities findBookingById(@RequestHeader("X-Sharer-User-Id") Long userId, @PathVariable Long id) {
+        return bookingService.findBookingById(userId, id);
     }
 
     @GetMapping
@@ -45,15 +44,15 @@ public class BookingController {
     }
 
     @PatchMapping("/{id}")
-    public BookingDtoWithEntities update(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                 @Valid @PathVariable Long id,
-                                 @RequestParam(name = "approved") String approved) {
-        return bookingService.update(userId, id, approved);
+    public BookingDtoWithEntities updateBooking(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                                @Valid @PathVariable Long id,
+                                                @RequestParam(name = "approved") String approved) {
+        return bookingService.updateBooking(userId, id, approved);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteById(@RequestHeader("X-Sharer-User-Id") Long userId,
-                           @PathVariable Long id) {
-        bookingService.deleteById(userId, id);
+    public void deleteBookingById(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                  @PathVariable Long id) {
+        bookingService.deleteBookingById(userId, id);
     }
 }

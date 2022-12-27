@@ -55,8 +55,8 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> getItems(long userId) {
-        final User userWrap = userRepository.findById(userId).orElseThrow(
-                () -> new EntityNotFoundException(String.format("User with id=%d not found!", userId))
+        final User user = userRepository.findById(userId).orElseThrow(
+                () -> new EntityNotFoundException(String.format("Пользователь с id=%d не найден!", userId))
         );
         Comparator<ItemDto> comparator = (o1, o2) -> {
             final BookingDto lb1 = o1.getLastBooking();
@@ -73,7 +73,7 @@ public class ItemServiceImpl implements ItemService {
             }
             return lb1.getStart().compareTo(lb2.getStart());
         };
-        return itemRepository.findAllByOwnerId(userWrap.getId()).stream()
+        return itemRepository.findAllByOwnerId(user.getId()).stream()
                 .map(it -> ItemMapper.mapToItemDto(it, commentRepository.findAllByItemId(it.getId())))
                 .peek(it -> {
                     final List<Booking> bookings = bookingRepository.findAllByItemId(it.getId());
@@ -93,7 +93,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto addNewItem(Long id, ItemDto itemDto) {
         if (itemValidation(itemDto) && isUserPresent(id)) {
             User user = userRepository.findById(id).orElseThrow(
-                    () -> new EntityNotFoundException(String.format("User with id=%d not found!", id))
+                    () -> new EntityNotFoundException(String.format("Пользователь с id=%d не найден!", id))
             );
             Item item = itemRepository.save(ItemMapper.mapToItem(itemDto, user));
             Set<Comment> comments = commentRepository.findAllByItemId(item.getId());
@@ -167,17 +167,17 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public CommentWithInfoDto addComment(CommentDto commentDto, Long userId, Long id) {
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new EntityNotFoundException(String.format("User with id=%d not found!", userId))
+                () -> new EntityNotFoundException(String.format("Пользователь с id=%d не найден!", userId))
         );
         Item item = itemRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException(String.format("Item with id=%d not found!", id))
+                () -> new EntityNotFoundException(String.format("Вещь с id=%d не найдена!", id))
         );
 
         checkIfBookedItem(id, userId);
 
         final Comment comment = CommentMapper.mapToComment(commentDto, item, user);
-        final Comment commentWrap = commentRepository.save(comment);
-        return CommentMapper.mapToCommentInfoDto(commentWrap);
+        final Comment commentToAdd = commentRepository.save(comment);
+        return CommentMapper.mapToCommentInfoDto(commentToAdd);
     }
 
     private Booking findBookingByStatePastOrFuture(BookingState state, List<Booking> bookings) {
