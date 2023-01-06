@@ -1,16 +1,24 @@
 package ru.practicum.shareit.item.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
+import ru.practicum.shareit.user.model.User;
 
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Set;
 
-@Data
-@Builder
+@Entity
+@Table(name = "items")
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
+@NoArgsConstructor
 public class Item {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotEmpty
     @NotNull
@@ -19,6 +27,13 @@ public class Item {
     @NotEmpty
     private String description;
     @NotNull
+    @Column(name = "is_available")
     private Boolean available;
-    private Long owner;
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private User owner;
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "comments", joinColumns = @JoinColumn(name = "item_id"))
+    @Column(name = "id")
+    private final Set<Long> comments = new HashSet<>();
 }

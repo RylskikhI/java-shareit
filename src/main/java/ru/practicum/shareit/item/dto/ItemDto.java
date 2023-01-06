@@ -1,15 +1,18 @@
 package ru.practicum.shareit.item.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import ru.practicum.shareit.booking.dto.BookingDto;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 @Data
-@Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class ItemDto {
     private Long id;
     @NotEmpty
@@ -19,7 +22,9 @@ public class ItemDto {
     @NotNull
     private String description;
     @NotNull
+    @Column(name = "is_available")
     private Boolean available;
-    private Long owner;
-
+    private BookingDto lastBooking;
+    private BookingDto nextBooking;
+    private Set<CommentWithInfoDto> comments;
 }
