@@ -27,7 +27,7 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @Service
 @Slf4j
-public class RequestServiceImpl implements RequestService{
+public class RequestServiceImpl implements RequestService {
 
     private final ItemRequestRepository itemRequestRepository;
 
@@ -51,7 +51,7 @@ public class RequestServiceImpl implements RequestService{
                 () -> new UserNotFoundException(String.format("Пользователь с id=%d не найден!", userId))
         );
 
-        if(itemRequestDto.getDescription() == null) {
+        if (itemRequestDto.getDescription() == null) {
             throw new ValidationException("Отсутствует описание в запросе");
         }
 
