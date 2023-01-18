@@ -29,7 +29,7 @@ public interface BookingService {
      * @param state Booking state.
      * @return List BookingDtoWithEntities.
      */
-    List<BookingDtoWithEntities> findAllByBookerId(Long userId, String state);
+    List<BookingDtoWithEntities> findAllByBookerId(Long userId, String state, Integer from, Integer size);
 
     /**
      * Поиск всех бронирований по владельцу, сортировка по убыванию даты старта.
@@ -37,7 +37,7 @@ public interface BookingService {
      * @param state Booking state.
      * @return List BookingDtoWithEntities.
      */
-    List<BookingDtoWithEntities> findAllByItemOwnerId(Long userId, String state);
+    List<BookingDtoWithEntities> findAllByItemOwnerId(Long userId, String state, Integer from, Integer size);
 
     /**
      * Обновить бронирование по id. Подтверждение или отклонение запроса на бронирование.
@@ -46,7 +46,7 @@ public interface BookingService {
      * @param approved Параметр принимает true или false.
      * @return BookingDtoWithEntities.
      */
-    BookingDtoWithEntities updateBooking(Long userId, Long id, String approved);
+    BookingDtoWithEntities updateBooking(Long userId, Long id, Boolean approved);
 
     /**
      * Удалить бронирование по id.

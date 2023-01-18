@@ -6,12 +6,11 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public class CommentMapper {
 
-    public static CommentWithInfoDto mapToCommentInfoDto(@NotNull Comment comment) {
+    public static CommentWithInfoDto mapToCommentInfoDto(Comment comment) {
         return new CommentWithInfoDto(
                 comment.getId(),
                 comment.getText(),
@@ -20,13 +19,20 @@ public class CommentMapper {
         );
     }
 
-    public static Comment mapToComment(@NotNull CommentDto commentDto, @NotNull Item item, @NotNull User author) {
+    public static Comment mapToComment(CommentDto commentDto, Item item, User author) {
         return new Comment(
                 commentDto.getId(),
                 commentDto.getText(),
                 LocalDateTime.now(),
                 item,
                 author
+        );
+    }
+
+    public static CommentDto mapToCommentDto(Comment comment) {
+        return new CommentDto(
+                comment.getId(),
+                comment.getText()
         );
     }
 }

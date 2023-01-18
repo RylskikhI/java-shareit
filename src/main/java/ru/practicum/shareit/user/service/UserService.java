@@ -1,10 +1,8 @@
 package ru.practicum.shareit.user.service;
 
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserService {
 
@@ -25,16 +23,16 @@ public interface UserService {
      * Обновить пользователя по id.
      * @param updatedUser Entity.
      * @param id User id.
-     * @return User.
+     * @return UserDto.
      */
-    User updateUser(Long id, User updatedUser);
+    UserDto updateUser(Long id, UserDto updatedUser);
 
     /**
      * Поиск пользователя по id.
      * @param userId User id.
-     * @return Optional<User>.
+     * @return UserDto.
      */
-    Optional<User> getUserById(Long userId);
+    UserDto getUserById(Long userId);
 
     /**
      * Удалить пользователя по id.

@@ -4,11 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.service.UserService;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.model.User;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/users")
@@ -32,12 +30,12 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public Optional<User> getUserById(@PathVariable Long userId) {
+    public UserDto getUserById(@PathVariable Long userId) {
         return userService.getUserById(userId);
     }
 
     @PatchMapping("/{userId}")
-    public User updateUser(@Valid @PathVariable Long userId, @RequestBody User updatedUser) {
+    public UserDto updateUser(@Valid @PathVariable Long userId, @RequestBody UserDto updatedUser) {
         return userService.updateUser(userId, updatedUser);
     }
 

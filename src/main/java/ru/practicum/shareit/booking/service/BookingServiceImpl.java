@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.request.MyPageRequest;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
@@ -78,7 +80,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDtoWithEntities> findAllByBookerId(Long userId, String state) {
+    public List<BookingDtoWithEntities> findAllByBookerId(Long userId, String state, Integer from, Integer size) {
         final User user = userRepository.findById(userId).orElseThrow(
                 () -> new EntityNotFoundException(String.format("Пользователь с id=%d не найден!", userId))
         );
@@ -86,12 +88,13 @@ public class BookingServiceImpl implements BookingService {
         if (bookingState == null) {
             throw new BookingStateExistsException("Unknown state: UNSUPPORTED_STATUS");
         }
-        List<Booking> bookings = bookingRepository.findAllByBookerId(user.getId(), Sort.by(Sort.Direction.DESC, "start"));
-        return findAllByState(bookingState, bookings);
+        MyPageRequest pageRequest = new MyPageRequest(from, size, Sort.by(Sort.Direction.DESC, "start"));
+        Page<Booking> bookings = bookingRepository.findAllByBookerId(user.getId(), pageRequest);
+        return findAllByState(bookingState, bookings.getContent());
     }
 
     @Override
-    public List<BookingDtoWithEntities> findAllByItemOwnerId(Long userId, String state) {
+    public List<BookingDtoWithEntities> findAllByItemOwnerId(Long userId, String state, Integer from, Integer size) {
         final User user = userRepository.findById(userId).orElseThrow(
                 () -> new EntityNotFoundException(String.format("Пользователь с id=%d не найден!", userId))
         );
@@ -99,13 +102,14 @@ public class BookingServiceImpl implements BookingService {
         if (bookingState == null) {
             throw new BookingStateExistsException("Unknown state: UNSUPPORTED_STATUS");
         }
-        List<Booking> bookings = bookingRepository.findAllByItemOwnerId(user.getId(), Sort.by(Sort.Direction.DESC, "start"));
-        return findAllByState(bookingState, bookings);
+        MyPageRequest pageRequest = new MyPageRequest(from, size, Sort.by(Sort.Direction.DESC, "start"));
+        Page<Booking> bookings = bookingRepository.findAllByItemOwnerId(user.getId(), pageRequest);
+        return findAllByState(bookingState, bookings.getContent());
     }
 
     @Override
     @Transactional
-    public BookingDtoWithEntities updateBooking(Long userId, Long id, String approved) {
+    public BookingDtoWithEntities updateBooking(Long userId, Long id, Boolean approved) {
         final User user = userRepository.findById(userId).orElseThrow(
                 () -> new EntityNotFoundException(String.format("Пользователь с id=%d не найден!", userId))
         );
@@ -118,14 +122,14 @@ public class BookingServiceImpl implements BookingService {
         if (!item.getOwner().getId().equals(user.getId())) {
             throw new UserNotFoundException(String.format("Пользователь с userId=%d не является владельцем данной вещи!", userId));
         }
-        if (Boolean.parseBoolean(approved) && booking.getStatus() == BookingStatus.WAITING) {
+        if (approved && booking.getStatus() == BookingStatus.WAITING) {
             booking.setStatus(BookingStatus.APPROVED);
         } else if (booking.getStatus() == BookingStatus.WAITING) {
             booking.setStatus(BookingStatus.REJECTED);
         } else {
             throw new BookingStatusException(String.format("Статус бронирования=%s!", booking.getStatus()));
         }
-        bookingRepository.save(booking);
+
         return BookingMapper.mapToBookingDtoWithEntities(booking);
     }
 

@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.service;
 
+import org.springframework.data.domain.Pageable;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.CommentWithInfoDto;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -22,7 +23,7 @@ public interface ItemService {
      * @param userId User id, владелец(owner) вещи.
      * @return List<ItemDto>.
      */
-    List<ItemDto> getItems(long userId);
+    List<ItemDto> getItems(long userId, int page, int size);
 
     /**
      * Удалить вещь по id. Только владелец(owner) может сделать это.
@@ -33,12 +34,12 @@ public interface ItemService {
 
     /**
      * Обновить вещь по id. Только владелец(owner) может сделать это.
-     * @param item Entity dto.
+     * @param itemDto Entity dto.
      * @param userId User id, владелец(owner) вещи.
      * @param itemId Item id.
      * @return ItemDto.
      */
-    ItemDto updateItem(long userId, long itemId, Item item);
+    ItemDto updateItem(long userId, long itemId, ItemDto itemDto);
 
     /**
      * Найти вещь по id.
@@ -53,7 +54,7 @@ public interface ItemService {
      * @param text ключевое слово.
      * @return List<Item>.
      */
-    List<Item> searchItem(String text);
+    List<Item> searchItem(String text, Pageable pageable);
 
     /**
      * Добавить комментарий после бронирования.
