@@ -2,7 +2,6 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -89,8 +88,8 @@ public class BookingServiceImpl implements BookingService {
             throw new BookingStateExistsException("Unknown state: UNSUPPORTED_STATUS");
         }
         MyPageRequest pageRequest = new MyPageRequest(from, size, Sort.by(Sort.Direction.DESC, "start"));
-        Page<Booking> bookings = bookingRepository.findAllByBookerId(user.getId(), pageRequest);
-        return findAllByState(bookingState, bookings.getContent());
+        List<Booking> bookings = bookingRepository.findAllByBookerId(user.getId(), pageRequest);
+        return findAllByState(bookingState, bookings);
     }
 
     @Override
@@ -103,8 +102,8 @@ public class BookingServiceImpl implements BookingService {
             throw new BookingStateExistsException("Unknown state: UNSUPPORTED_STATUS");
         }
         MyPageRequest pageRequest = new MyPageRequest(from, size, Sort.by(Sort.Direction.DESC, "start"));
-        Page<Booking> bookings = bookingRepository.findAllByItemOwnerId(user.getId(), pageRequest);
-        return findAllByState(bookingState, bookings.getContent());
+        List<Booking> bookings = bookingRepository.findAllByItemOwnerId(user.getId(), pageRequest);
+        return findAllByState(bookingState, bookings);
     }
 
     @Override

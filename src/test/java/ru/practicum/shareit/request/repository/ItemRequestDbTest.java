@@ -1,4 +1,4 @@
-package ru.practicum.shareit.request.database;
+package ru.practicum.shareit.request.repository;
 
 import java.util.List;
 import java.time.LocalDateTime;

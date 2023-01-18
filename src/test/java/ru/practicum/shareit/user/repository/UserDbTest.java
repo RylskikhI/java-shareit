@@ -1,4 +1,4 @@
-package ru.practicum.shareit.user.database;
+package ru.practicum.shareit.user.repository;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
