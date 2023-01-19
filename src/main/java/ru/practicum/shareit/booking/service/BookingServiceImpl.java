@@ -21,8 +21,11 @@ import ru.practicum.shareit.user.repository.UserRepository;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @Service
 @Slf4j
@@ -87,9 +90,8 @@ public class BookingServiceImpl implements BookingService {
         if (bookingState == null) {
             throw new BookingStateExistsException("Unknown state: UNSUPPORTED_STATUS");
         }
-        MyPageRequest pageRequest = new MyPageRequest(from, size, Sort.by(Sort.Direction.DESC, "start"));
-        List<Booking> bookings = bookingRepository.findAllByBookerId(user.getId(), pageRequest);
-        return findAllByState(bookingState, bookings);
+        final MyPageRequest pageRequest = new MyPageRequest(from, size, Sort.by(DESC, "start"));
+        return findAllByStateBooker(user.getId(), bookingState, pageRequest);
     }
 
     @Override
@@ -101,9 +103,8 @@ public class BookingServiceImpl implements BookingService {
         if (bookingState == null) {
             throw new BookingStateExistsException("Unknown state: UNSUPPORTED_STATUS");
         }
-        MyPageRequest pageRequest = new MyPageRequest(from, size, Sort.by(Sort.Direction.DESC, "start"));
-        List<Booking> bookings = bookingRepository.findAllByItemOwnerId(user.getId(), pageRequest);
-        return findAllByState(bookingState, bookings);
+        final MyPageRequest pageRequest = new MyPageRequest(from, size, Sort.by(DESC, "start"));
+        return findAllByStateOwner(user.getId(), bookingState, pageRequest);
     }
 
     @Override
@@ -150,44 +151,76 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
-    public List<BookingDtoWithEntities> findAllByState(BookingState state, List<Booking> bookings) {
-        final LocalDateTime currentTime = LocalDateTime.now();
+    private List<BookingDtoWithEntities> findAllByStateOwner(Long userId, BookingState state, MyPageRequest pageRequest) {
+        final LocalDateTime currentTime = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
 
         switch (state) {
             case CURRENT: {
-                return bookings.stream()
-                        .filter(it -> it.getStart().isBefore(currentTime) && it.getEnd().isAfter(currentTime))
+                return bookingRepository.findAllByItemOwnerIdAndStartIsBeforeAndEndIsAfter(userId, currentTime, currentTime, pageRequest).stream()
                         .map(BookingMapper::mapToBookingDtoWithEntities)
-                        .collect(Collectors.toList());
+                        .collect(toList());
             }
             case PAST: {
-                return bookings.stream()
-                        .filter(it -> it.getEnd().isBefore(currentTime))
+                return bookingRepository.findAllByItemOwnerIdAndEndIsBefore(userId, currentTime, pageRequest).stream()
                         .map(BookingMapper::mapToBookingDtoWithEntities)
-                        .collect(Collectors.toList());
+                        .collect(toList());
             }
             case FUTURE: {
-                return bookings.stream()
-                        .filter(it -> it.getStart().isAfter(currentTime))
+                return bookingRepository.findAllByItemOwnerIdAndStartIsAfter(userId, currentTime, pageRequest).stream()
                         .map(BookingMapper::mapToBookingDtoWithEntities)
-                        .collect(Collectors.toList());
+                        .collect(toList());
             }
             case WAITING: {
-                return bookings.stream()
-                        .filter(it -> it.getStatus() == BookingStatus.WAITING)
+                return bookingRepository.findAllByItemOwnerIdAndStatusEquals(userId, BookingStatus.WAITING, pageRequest).stream()
                         .map(BookingMapper::mapToBookingDtoWithEntities)
-                        .collect(Collectors.toList());
+                        .collect(toList());
             }
             case REJECTED: {
-                return bookings.stream()
-                        .filter(it -> it.getStatus() == BookingStatus.REJECTED)
+                return bookingRepository.findAllByItemOwnerIdAndStatusEquals(userId, BookingStatus.REJECTED, pageRequest).stream()
                         .map(BookingMapper::mapToBookingDtoWithEntities)
-                        .collect(Collectors.toList());
+                        .collect(toList());
             }
             default: {
-                return bookings.stream()
+                return bookingRepository.findAllByItemOwnerId(userId, pageRequest).stream()
                         .map(BookingMapper::mapToBookingDtoWithEntities)
-                        .collect(Collectors.toList());
+                        .collect(toList());
+            }
+        }
+    }
+
+    private List<BookingDtoWithEntities> findAllByStateBooker(Long userId, BookingState state, MyPageRequest pageRequest) {
+        final LocalDateTime currentTime = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+
+        switch (state) {
+            case CURRENT: {
+                return bookingRepository.findAllByBookerIdAndStartIsBeforeAndEndIsAfter(userId, currentTime, currentTime, pageRequest).stream()
+                        .map(BookingMapper::mapToBookingDtoWithEntities)
+                        .collect(toList());
+            }
+            case PAST: {
+                return bookingRepository.findAllByBookerIdAndEndIsBefore(userId, currentTime, pageRequest).stream()
+                        .map(BookingMapper::mapToBookingDtoWithEntities)
+                        .collect(toList());
+            }
+            case FUTURE: {
+                return bookingRepository.findAllByBookerIdAndStartIsAfter(userId, currentTime, pageRequest).stream()
+                        .map(BookingMapper::mapToBookingDtoWithEntities)
+                        .collect(toList());
+            }
+            case WAITING: {
+                return bookingRepository.findAllByBookerIdAndStatusEquals(userId, BookingStatus.WAITING, pageRequest).stream()
+                        .map(BookingMapper::mapToBookingDtoWithEntities)
+                        .collect(toList());
+            }
+            case REJECTED: {
+                return bookingRepository.findAllByBookerIdAndStatusEquals(userId, BookingStatus.REJECTED, pageRequest).stream()
+                        .map(BookingMapper::mapToBookingDtoWithEntities)
+                        .collect(toList());
+            }
+            default: {
+                return bookingRepository.findAllByBookerId(userId, pageRequest).stream()
+                        .map(BookingMapper::mapToBookingDtoWithEntities)
+                        .collect(toList());
             }
         }
     }

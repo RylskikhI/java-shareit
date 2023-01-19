@@ -1,5 +1,7 @@
 package ru.practicum.shareit.booking.service;
 
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Optional;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.AfterEach;
@@ -7,9 +9,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Sort;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoWithEntities;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
@@ -20,6 +24,7 @@ import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.request.MyPageRequest;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
@@ -410,5 +415,99 @@ class BookingServiceTest {
 
         Mockito.verify(userRepository, times(1)).findById(userId);
         Mockito.verify(bookingRepository, times(1)).findById(booking.getId());
+    }
+
+    @ParameterizedTest
+    @EnumSource(BookingState.class)
+    void findAllByBookerId(BookingState state) {
+        MyPageRequest pageRequest = new MyPageRequest(0, 10, Sort.by(Sort.Direction.DESC, "start"));
+        LocalDateTime currentTime = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+
+        Mockito.when(userRepository.findById(booker.getId())).thenReturn(Optional.of(booker));
+        switch (state) {
+            case CURRENT: {
+                Mockito.when(bookingRepository.findAllByBookerIdAndStartIsBeforeAndEndIsAfter(booker.getId(), currentTime,
+                        currentTime, pageRequest)).thenReturn(List.of(booking));
+                break;
+            }
+            case PAST: {
+                booking.setEnd(LocalDateTime.now().minusDays(5));
+                Mockito.when(bookingRepository.findAllByBookerIdAndEndIsBefore(booker.getId(), currentTime,
+                        pageRequest)).thenReturn(List.of(booking));
+                break;
+            }
+            case FUTURE: {
+                booking.setStart(LocalDateTime.now().plusDays(5));
+                Mockito.when(bookingRepository.findAllByBookerIdAndStartIsAfter(booker.getId(), currentTime,
+                        pageRequest)).thenReturn(List.of(booking));
+                break;
+            }
+            case WAITING: {
+                Mockito.when(bookingRepository.findAllByBookerIdAndStatusEquals(booker.getId(), booking.getStatus(),
+                        pageRequest)).thenReturn(List.of(booking));
+                break;
+            }
+            case REJECTED: {
+                booking.setStatus(BookingStatus.REJECTED);
+                Mockito.when(bookingRepository.findAllByBookerIdAndStatusEquals(booker.getId(), booking.getStatus(),
+                        pageRequest)).thenReturn(List.of(booking));
+                break;
+            }
+            case ALL: {
+                Mockito.when(bookingRepository.findAllByBookerId(booker.getId(), pageRequest)).thenReturn(List.of(booking));
+                break;
+            }
+        }
+
+        List<BookingDtoWithEntities> bookings = bookingService.findAllByBookerId(booker.getId(), state.name(), 0, 10);
+
+        assertEquals(bookings.size(), 1);
+    }
+
+    @ParameterizedTest
+    @EnumSource(BookingState.class)
+    void findAllByItemOwnerId(BookingState state) {
+        MyPageRequest pageRequest = new MyPageRequest(0, 10, Sort.by(Sort.Direction.DESC, "start"));
+        LocalDateTime currentTime = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+
+        Mockito.when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
+        switch (state) {
+            case CURRENT: {
+                Mockito.when(bookingRepository.findAllByItemOwnerIdAndStartIsBeforeAndEndIsAfter(owner.getId(), currentTime,
+                        currentTime, pageRequest)).thenReturn(List.of(booking));
+                break;
+            }
+            case PAST: {
+                booking.setEnd(currentTime.minusDays(5));
+                Mockito.when(bookingRepository.findAllByItemOwnerIdAndEndIsBefore(owner.getId(), currentTime,
+                        pageRequest)).thenReturn(List.of(booking));
+                break;
+            }
+            case FUTURE: {
+                booking.setStart(currentTime.plusDays(5));
+                Mockito.when(bookingRepository.findAllByItemOwnerIdAndStartIsAfter(owner.getId(), currentTime,
+                        pageRequest)).thenReturn(List.of(booking));
+                break;
+            }
+            case WAITING: {
+                Mockito.when(bookingRepository.findAllByItemOwnerIdAndStatusEquals(owner.getId(), booking.getStatus(),
+                        pageRequest)).thenReturn(List.of(booking));
+                break;
+            }
+            case REJECTED: {
+                booking.setStatus(BookingStatus.REJECTED);
+                Mockito.when(bookingRepository.findAllByItemOwnerIdAndStatusEquals(owner.getId(), booking.getStatus(),
+                        pageRequest)).thenReturn(List.of(booking));
+                break;
+            }
+            case ALL: {
+                Mockito.when(bookingRepository.findAllByItemOwnerId(owner.getId(), pageRequest)).thenReturn(List.of(booking));
+                break;
+            }
+        }
+
+        List<BookingDtoWithEntities> bookings = bookingService.findAllByItemOwnerId(owner.getId(), state.name(), 0, 10);
+
+        assertEquals(bookings.size(), 1);
     }
 }
