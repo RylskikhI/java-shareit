@@ -27,8 +27,8 @@ public class BookingJsonTest {
             .create();
     private static final Item ITEM = Item.builder()
             .id(1L)
-            .name("Wrench")
-            .description("Torque wrench")
+            .name("Saw")
+            .description("Circular saw")
             .available(true)
             .build();
     private static final User BOOKER = new User(1L, "George", "george@gmail.com");
@@ -52,7 +52,7 @@ public class BookingJsonTest {
     }
 
     @Test
-    void bookingInfoDtoSerialize() throws IOException {
+    void bookingDtoWithEntitiesSerialize() throws IOException {
         BookingDtoWithEntities dto = BookingMapper.mapToBookingDtoWithEntities(BOOKING);
         JsonContent<BookingDtoWithEntities> json = testerInfoDto.write(dto);
 
@@ -80,7 +80,7 @@ public class BookingJsonTest {
     }
 
     @Test
-    void bookingInfoDtoDeserialize() throws IOException {
+    void bookingDtoWithEntitiesDeserialize() throws IOException {
         BookingDtoWithEntities dto = BookingMapper.mapToBookingDtoWithEntities(BOOKING);
         String content = gson.toJson(dto);
         BookingDtoWithEntities result = testerInfoDto.parse(content).getObject();

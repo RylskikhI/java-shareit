@@ -35,7 +35,7 @@ class UserControllerTest {
 
     @BeforeEach
     void init() {
-        user = new User(1L, "Nikolas", "nik@mail.ru");
+        user = new User(1L, "John", "john@gmail.com");
         dto = UserMapper.mapToUserDto(user);
         gson = new GsonBuilder()
                 .serializeNulls()
@@ -51,7 +51,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("Send GET request /users/{id}")
-    void findById() throws Exception {
+    void getUserById() throws Exception {
         Mockito.when(userService.getUserById(user.getId())).thenReturn(dto);
 
         this.mockMvc.perform(MockMvcRequestBuilders
@@ -65,7 +65,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("Send GET request /users/{id}")
-    void findByNotValidId() throws Exception {
+    void getUserByNotValidId() throws Exception {
         Mockito.when(userService.getUserById(user.getId())).thenThrow(UserNotFoundException.class);
 
         this.mockMvc.perform(MockMvcRequestBuilders
@@ -78,7 +78,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("Send GET request /users")
-    void findAll() throws Exception {
+    void getAllUsers() throws Exception {
         Mockito.when(userService.getAllUsers()).thenReturn(List.of(dto));
 
         this.mockMvc.perform(MockMvcRequestBuilders
@@ -92,7 +92,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("Send POST request /users")
-    void save() throws Exception {
+    void saveNewUser() throws Exception {
         Mockito.when(userService.saveUser(Mockito.any())).thenReturn(dto);
 
         this.mockMvc.perform(MockMvcRequestBuilders
@@ -106,7 +106,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("Send PATCH request /users/{id}")
-    void update() throws Exception {
+    void updateUser() throws Exception {
         dto.setName("Mike");
         Mockito.when(userService.updateUser(Mockito.anyLong(), Mockito.any())).thenReturn(dto);
 
@@ -122,7 +122,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("Send DELETE request users/{id}")
-    void deleteById() throws Exception {
+    void deleteUser() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders
                         .delete("/users/{id}", user.getId())
                         .contentType(MediaType.APPLICATION_JSON))

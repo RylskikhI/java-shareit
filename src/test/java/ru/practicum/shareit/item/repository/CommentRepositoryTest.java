@@ -29,16 +29,16 @@ public class CommentRepositoryTest {
 
     @BeforeEach
     void init() {
-        owner = new User(null, "Nikolas", "nik@mail.ru");
-        author = new User(null, "Djon", "djon@mail.ru");
+        owner = new User(null, "John", "john@gmail.com");
+        author = new User(null, "Fred", "fred@gmail.com");
         item = Item.builder()
                 .id(null)
-                .name("Drill")
-                .description("Drill 2000 MaxPro")
+                .name("Saw")
+                .description("Circular saw")
                 .available(true)
                 .owner(owner)
                 .build();
-        comment = new Comment(null, "Very good Drill!", LocalDateTime.now(), item, author);
+        comment = new Comment(null, "Perfect saw!", LocalDateTime.now(), item, author);
 
         em.persist(owner);
         em.persist(author);

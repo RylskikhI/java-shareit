@@ -51,16 +51,16 @@ class ItemControllerTest {
 
     @BeforeEach
     void init() {
-        owner = new UserDto(1L, "Nikolas", "nik@mail.ru");
-        booker = new UserDto(2L, "Djon", "djony@mail.ru");
+        owner = new UserDto(1L, "John", "john@gmail.com");
+        booker = new UserDto(2L, "Fred", "fred@gmail.com");
         item = Item.builder()
                 .id(1L)
-                .name("Drill")
-                .description("Cordless drill")
+                .name("Saw")
+                .description("Circular saw")
                 .available(true)
                 .owner(UserMapper.mapToUser(owner))
                 .build();
-        comment = new Comment(1L, "Good drill!", LocalDateTime.now(), item, UserMapper.mapToUser(booker));
+        comment = new Comment(1L, "Perfect circular saw!", LocalDateTime.now(), item, UserMapper.mapToUser(booker));
         gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter())
                 .create();
@@ -81,7 +81,7 @@ class ItemControllerTest {
 
     @Test
     @DisplayName("Send GET request /items/{id}")
-    void findById() throws Exception {
+    void getItemById() throws Exception {
         Mockito.when(itemService.getItemById(owner.getId(), item.getId())).thenReturn(dto);
 
         this.mockMvc.perform(MockMvcRequestBuilders
@@ -97,7 +97,7 @@ class ItemControllerTest {
 
     @Test
     @DisplayName("Send GET request /items/{id}")
-    void findByNotValidId() throws Exception {
+    void getItemByNotValidId() throws Exception {
         Mockito.when(itemService.getItemById(owner.getId(), item.getId())).thenThrow(ItemNotFoundException.class);
 
         this.mockMvc.perform(MockMvcRequestBuilders
@@ -111,7 +111,7 @@ class ItemControllerTest {
 
     @Test
     @DisplayName("Send GET request /items")
-    void findAll() throws Exception {
+    void getAllItems() throws Exception {
         Mockito.when(itemService.getItems(owner.getId(), 0, 10)).thenReturn(List.of(dto));
 
         this.mockMvc.perform(MockMvcRequestBuilders
@@ -126,7 +126,7 @@ class ItemControllerTest {
 
     @Test
     @DisplayName("Send POST request /items")
-    void save() throws Exception {
+    void addItem() throws Exception {
         dto = ItemMapper.mapToItemDto(item, new ItemRequest());
         Mockito.when(itemService.addNewItem(Mockito.anyLong(), Mockito.any())).thenReturn(dto);
 
@@ -142,7 +142,7 @@ class ItemControllerTest {
 
     @Test
     @DisplayName("Send POST request /items/{id}/comment")
-    void saveComment() throws Exception {
+    void addComment() throws Exception {
         CommentDto commentDto = CommentMapper.mapToCommentDto(comment);
         Mockito.when(itemService.addComment(Mockito.any(), Mockito.anyLong(), Mockito.anyLong())).thenReturn(commentInfoDto);
 
@@ -158,7 +158,7 @@ class ItemControllerTest {
 
     @Test
     @DisplayName("Send POST request /items/{id}/comment")
-    void saveCommentByNotBooker() throws Exception {
+    void addCommentByNotBooker() throws Exception {
         CommentDto commentDto = CommentMapper.mapToCommentDto(comment);
         Mockito.when(itemService.addComment(Mockito.any(), Mockito.anyLong(), Mockito.anyLong())).thenThrow(ValidationException.class);
 
@@ -174,10 +174,10 @@ class ItemControllerTest {
 
     @Test
     @DisplayName("Send PATCH request /items/{id}")
-    void update() throws Exception {
-        dto.setName("Drill 2000");
+    void updateItem() throws Exception {
+        dto.setName("Saw Siemens");
         dto.setAvailable(false);
-        dto.setDescription("Very good drill!");
+        dto.setDescription("Very good saw!");
         Mockito.when(itemService.updateItem(Mockito.anyLong(), Mockito.anyLong(), Mockito.any())).thenReturn(dto);
 
         this.mockMvc.perform(MockMvcRequestBuilders
@@ -186,16 +186,16 @@ class ItemControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(dto)))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Drill 2000"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Saw Siemens"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.available").value(false))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("Very good drill!"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("Very good saw!"));
 
         Mockito.verify(itemService, Mockito.times(1)).updateItem(Mockito.anyLong(), Mockito.anyLong(), Mockito.any());
     }
 
     @Test
     @DisplayName("Send PATCH request /items/{id}")
-    void updateByNotOwner() throws Exception {
+    void updateItemByNotOwner() throws Exception {
         Mockito.when(itemService.updateItem(Mockito.anyLong(), Mockito.anyLong(), Mockito.any())).thenThrow(UserNotFoundException.class);
 
         this.mockMvc.perform(MockMvcRequestBuilders
@@ -210,7 +210,7 @@ class ItemControllerTest {
 
     @Test
     @DisplayName("Send DELETE request items/{id}")
-    void deleteById() throws Exception {
+    void deleteItem() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders
                         .delete("/items/{id}", item.getId())
                         .header("X-Sharer-User-Id", owner.getId())

@@ -131,7 +131,7 @@ class ItemRequestServiceTest {
 
     @ParameterizedTest
     @ValueSource(longs = {11, 12, 32, 999})
-    void getAllRequestsMadeByOwner_ByNotValidUserId(Long userId) {
+    void getAllRequestsMadeByOwnerByNotValidUserId(Long userId) {
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
             requestService.getRequestsMadeByOwner(userId);
         });

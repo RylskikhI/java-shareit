@@ -97,7 +97,7 @@ class ItemServiceTest {
 
     @ParameterizedTest
     @MethodSource("getBookings")
-    void findById(Booking lastBooking, Booking nextBooking) {
+    void getItemById(Booking lastBooking, Booking nextBooking) {
         Mockito.when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
         Mockito.when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
         Mockito.when(bookingRepository.findAllByItemOwnerId(owner.getId(), Sort.by(Sort.Direction.DESC, "start")))
@@ -133,7 +133,7 @@ class ItemServiceTest {
 
     @ParameterizedTest
     @ValueSource(longs = {11, 12, 32, 999})
-    void findByNotValidUserId(Long userId) {
+    void getItemByNotValidUserId(Long userId) {
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
             itemService.getItemById(userId, item.getId());
         });
@@ -146,7 +146,7 @@ class ItemServiceTest {
 
     @ParameterizedTest
     @ValueSource(longs = {11, 12, 32, 999})
-    void findByNotValidId(Long id) {
+    void getItemByNotValidId(Long id) {
         Mockito.when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
 
         ItemNotFoundException exception = assertThrows(ItemNotFoundException.class, () -> {
@@ -162,8 +162,8 @@ class ItemServiceTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {" ", "Turbo drill", "DRILL", "2000"})
-    void findAllByText(String text) {
+    @ValueSource(strings = {" ", "Torque screwdriver", "TORQUE", "screwdriver"})
+    void search(String text) {
         Pageable pageable = PageRequest.of(0, 10);
         Mockito.when(itemRepository.search(text, pageable)).thenReturn(text.isBlank() ? new PageImpl<>(Collections.emptyList()) : new PageImpl<>(List.of(item)));
 
@@ -179,7 +179,7 @@ class ItemServiceTest {
     }
 
     @Test
-    void findAll() {
+    void getAllItems() {
         Pageable pageable = PageRequest.of(0, 10);
         Mockito.when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
         Mockito.when(itemRepository.findAllByOwnerId(owner.getId(), pageable)).thenReturn(List.of(item));
@@ -193,7 +193,7 @@ class ItemServiceTest {
     }
 
     @Test
-    void findAllByNotValidUserId() {
+    void getAllItemsByNotValidUserId() {
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
             itemService.getItems(owner.getId(), 0, 10);
         });
@@ -205,7 +205,7 @@ class ItemServiceTest {
     }
 
     @Test
-    void save() {
+    void addItem() {
         Mockito.when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
         Mockito.when(requestRepository.findById(request.getId())).thenReturn(Optional.of(request));
         Mockito.when(itemRepository.save(Mockito.any())).thenReturn(item);
@@ -225,7 +225,7 @@ class ItemServiceTest {
     }
 
     @Test
-    void saveByNotValidUserId() {
+    void addItemByNotValidUserId() {
         ItemDto dto = ItemMapper.mapToItemDto(item, request);
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
             itemService.addNewItem(owner.getId(), dto);
@@ -238,7 +238,7 @@ class ItemServiceTest {
     }
 
     @Test
-    void saveByNotValidRequestId() {
+    void addItemByNotValidRequestId() {
         Mockito.when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
 
         ItemDto dto = ItemMapper.mapToItemDto(item, request);
@@ -255,11 +255,11 @@ class ItemServiceTest {
     }
 
     @Test
-    void update() {
+    void updateItem() {
         Item newItem = Item.builder()
                 .id(item.getId())
                 .name("Saw")
-                .description("Electric saw")
+                .description("Circular saw")
                 .available(false)
                 .owner(owner)
                 .request(request)
@@ -281,7 +281,7 @@ class ItemServiceTest {
     }
 
     @Test
-    void updateByNotFoundUserId() {
+    void updateItemByNotFoundUserId() {
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
             ItemDto dto = ItemMapper.mapToItemDto(item, request);
             itemService.updateItem(owner.getId(), dto.getId(), dto);
@@ -294,7 +294,7 @@ class ItemServiceTest {
     }
 
     @Test
-    void updateByNotFoundItemId() {
+    void updateItemByNotFoundItemId() {
         Mockito.when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
 
         ItemNotFoundException exception = assertThrows(ItemNotFoundException.class, () -> {
@@ -311,11 +311,11 @@ class ItemServiceTest {
     }
 
     @Test
-    void updateByNotOwner() {
+    void updateItemByNotOwner() {
         Item newItem = Item.builder()
                 .id(item.getId())
                 .name("Saw")
-                .description("Electric saw")
+                .description("Circular saw")
                 .available(false)
                 .owner(owner)
                 .request(request)
@@ -339,7 +339,7 @@ class ItemServiceTest {
     }
 
     @Test
-    void deleteItemById() {
+    void deleteItem() {
         Mockito.when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
         Mockito.when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
 
@@ -402,7 +402,7 @@ class ItemServiceTest {
     }
 
     @Test
-    void saveCommentByNotFoundUserId() {
+    void addCommentByNotFoundUserId() {
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
             CommentDto dto = CommentMapper.mapToCommentDto(comment);
             itemService.addComment(dto, owner.getId(), item.getId());
@@ -415,7 +415,7 @@ class ItemServiceTest {
     }
 
     @Test
-    void saveCommentByNotFoundItemId() {
+    void addCommentByNotFoundItemId() {
         Mockito.when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
 
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {

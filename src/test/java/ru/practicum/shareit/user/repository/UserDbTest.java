@@ -39,7 +39,7 @@ public class UserDbTest {
     }
 
     @Test
-    void findById() {
+    void getUserById() {
         UserDto dto = makeUser(user);
         TypedQuery<Long> query = em.createQuery("select u.id from User as u where u.id = :id", Long.class);
         Long id = query
@@ -54,7 +54,7 @@ public class UserDbTest {
     }
 
     @Test
-    void findAll() {
+    void getAllUsers() {
         makeUsers();
         TypedQuery<User> query = em.createQuery("select u from User as u", User.class);
         List<User> result = query.getResultList();
@@ -64,7 +64,7 @@ public class UserDbTest {
     }
 
     @Test
-    void save() {
+    void saveNewUser() {
         UserDto dto = makeUser(user);
         TypedQuery<User> query = em.createQuery("select u from User as u where u.email = :email", User.class);
         user = query
@@ -77,7 +77,7 @@ public class UserDbTest {
     }
 
     @Test
-    void saveByEmailExists() {
+    void saveNewUserByEmailExists() {
         UserDto dto = makeUser(user);
         DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> {
             makeUser(user);
@@ -87,14 +87,14 @@ public class UserDbTest {
     }
 
     @Test
-    void update() {
+    void updateUser() {
         UserDto dto = makeUser(user);
         TypedQuery<User> query = em.createQuery("select u from User as u where u.id = :id", User.class);
         user = query
                 .setParameter("id", dto.getId())
                 .getSingleResult();
 
-        User newUser = new User(user.getId(), "Mike", "mike@mail.ru");
+        User newUser = new User(user.getId(), "Mike", "mike@yahoo.com");
         dto = UserMapper.mapToUserDto(newUser);
         dto = userService.updateUser(dto.getId(), dto);
 
@@ -104,7 +104,7 @@ public class UserDbTest {
     }
 
     @Test
-    void deleteById() {
+    void deleteUser() {
         UserDto dto = makeUser(user);
         TypedQuery<Long> query = em.createQuery("select u.id from User as u where u.id = :id", Long.class);
         Long id = query

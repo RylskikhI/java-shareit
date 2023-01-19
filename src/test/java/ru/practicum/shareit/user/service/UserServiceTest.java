@@ -37,7 +37,7 @@ class UserServiceTest {
     }
 
     @Test
-    void findById() {
+    void getUserById() {
         Mockito.when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
         UserDto dto = userService.getUserById(user.getId());
@@ -51,7 +51,7 @@ class UserServiceTest {
 
     @ParameterizedTest
     @ValueSource(longs = {11, 12, 32, 999})
-    void findByNotValidId(Long userId) {
+    void getUserByNotValidId(Long userId) {
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
             userService.getUserById(userId);
         });
@@ -63,7 +63,7 @@ class UserServiceTest {
     }
 
     @Test
-    void findAll() {
+    void getAllUsers() {
         Mockito.when(userRepository.findAllCustom()).thenReturn(List.of(user));
 
         List<UserDto> users = userService.getAllUsers();
@@ -74,7 +74,7 @@ class UserServiceTest {
     }
 
     @Test
-    void save() {
+    void saveNewUser() {
         Mockito.when(userRepository.save(Mockito.any())).thenReturn(user);
 
         UserDto dto = UserMapper.mapToUserDto(user);
@@ -88,8 +88,8 @@ class UserServiceTest {
     }
 
     @Test
-    void update() {
-        User newUser = new User(user.getId(), "Mike", "mike@mail.ru");
+    void updateUser() {
+        User newUser = new User(user.getId(), "Mike", "mike@gmail.com");
         Mockito.when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
         UserDto dto = UserMapper.mapToUserDto(newUser);
@@ -104,8 +104,8 @@ class UserServiceTest {
 
     @ParameterizedTest
     @ValueSource(longs = {11, 12, 32, 999})
-    void updateByNotValidId(Long userId) {
-        User newUser = new User(userId, "Mike", "mike@mail.ru");
+    void updateUserByNotValidId(Long userId) {
+        User newUser = new User(userId, "Mike", "mike@gmail.com");
         UserDto dto = UserMapper.mapToUserDto(newUser);
 
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
@@ -119,7 +119,7 @@ class UserServiceTest {
     }
 
     @Test
-    void deleteById() {
+    void deleteUser() {
         Mockito.when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
         userService.deleteUser(user.getId());
@@ -129,7 +129,7 @@ class UserServiceTest {
 
     @ParameterizedTest
     @ValueSource(longs = {11, 12, 32, 999})
-    void deleteByNotValidId(Long userId) {
+    void deleteUserByNotValidId(Long userId) {
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
             userService.deleteUser(userId);
         });

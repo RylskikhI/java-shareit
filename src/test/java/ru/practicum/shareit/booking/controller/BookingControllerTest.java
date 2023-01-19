@@ -49,12 +49,12 @@ class BookingControllerTest {
 
     @BeforeEach
     void init() {
-        owner = new UserDto(1L, "Nikolas", "nik@mail.ru");
-        booker = new UserDto(2L, "Djon", "djony@mail.ru");
+        owner = new UserDto(1L, "John", "john@gmail.com");
+        booker = new UserDto(2L, "Fred", "fred@gmail.com");
         item = Item.builder()
                 .id(1L)
-                .name("Drill")
-                .description("Cordless drill")
+                .name("Saw")
+                .description("Circular saw")
                 .available(true)
                 .owner(UserMapper.mapToUser(owner))
                 .build();
@@ -81,7 +81,7 @@ class BookingControllerTest {
 
     @Test
     @DisplayName("Send GET request /bookings/{id}")
-    void findById() throws Exception {
+    void findBookingById() throws Exception {
         Mockito.when(bookingService.findBookingById(owner.getId(), booking.getId())).thenReturn(bookingDtoWithEntities);
 
         this.mockMvc.perform(MockMvcRequestBuilders
@@ -96,7 +96,7 @@ class BookingControllerTest {
 
     @Test
     @DisplayName("Send GET request /bookings/{id}")
-    void findByNotValidId() throws Exception {
+    void findBookingByNotValidId() throws Exception {
         Mockito.when(bookingService.findBookingById(owner.getId(), booking.getId())).thenThrow(UserNotFoundException.class);
 
         this.mockMvc.perform(MockMvcRequestBuilders
@@ -168,7 +168,7 @@ class BookingControllerTest {
 
     @Test
     @DisplayName("Send POST request /bookings")
-    void save() throws Exception {
+    void createBooking() throws Exception {
         dto.setStart(booking.getStart().plusDays(15));
         dto.setEnd(booking.getEnd().plusDays(10));
         Mockito.when(bookingService.createBooking(Mockito.anyLong(), Mockito.any())).thenReturn(bookingDtoWithEntities);
@@ -185,7 +185,7 @@ class BookingControllerTest {
 
     @Test
     @DisplayName("Send PATCH request /bookings/{id}?approved={approved}")
-    void update() throws Exception {
+    void updateBooking() throws Exception {
         bookingDtoWithEntities.setStatus(BookingStatus.REJECTED);
         Mockito.when(bookingService.updateBooking(owner.getId(), booking.getId(), false)).thenReturn(bookingDtoWithEntities);
 
@@ -201,7 +201,7 @@ class BookingControllerTest {
 
     @Test
     @DisplayName("Send PATCH request /bookings/{id}?approved={approved}")
-    void updateByNotValidStatus() throws Exception {
+    void updateBookingByNotValidStatus() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders
                         .patch("/bookings/{id}?approved={approved}", booking.getId(), null)
                         .header("X-Sharer-User-Id", owner.getId())
@@ -211,7 +211,7 @@ class BookingControllerTest {
 
     @Test
     @DisplayName("Send DELETE request /bookings/{id}")
-    void deleteById() throws Exception {
+    void deleteBookingById() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders
                         .delete("/bookings/{id}", booking.getId())
                         .header("X-Sharer-User-Id", owner.getId())

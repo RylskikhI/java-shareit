@@ -29,22 +29,22 @@ public class ItemJsonTest {
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .serializeNulls()
             .create();
-    private static final User OWNER = new User(1L, "Nikolas", "nik@mail.ru");
-    private static final User REQUESTOR = new User(2L, "Bob", "bob@mail.ru");
-    private static final ItemRequest REQUEST = new ItemRequest(1L, "Drill 2000 MaxPro", LocalDateTime.now(),
+    private static final User OWNER = new User(1L, "John", "john@gmail.com");
+    private static final User REQUESTOR = new User(2L, "Fred", "fred@gmail.com");
+    private static final ItemRequest REQUEST = new ItemRequest(1L, "Circular saw", LocalDateTime.now(),
             REQUESTOR);
     private static final Item ITEM = Item.builder()
             .id(1L)
-            .name("Drill")
-            .description("Drill 2000 MaxPro")
+            .name("Saw")
+            .description("Circular saw")
             .available(true)
             .owner(OWNER)
             .request(REQUEST)
             .build();
     private static final Booking LAST_BOOKING = new Booking(1L, LocalDateTime.now(), LocalDateTime.now().plusDays(2),
-            BookingStatus.WAITING, ITEM, new User(3L, "Max", "max@mail.ru"));
+            BookingStatus.WAITING, ITEM, new User(3L, "George", "george@gmail.com"));
     private static final Booking NEXT_BOOKING = new Booking(2L, LocalDateTime.now(), LocalDateTime.now().plusDays(5),
-            BookingStatus.WAITING, ITEM, new User(4L, "Nik", "nik@mail.ru"));
+            BookingStatus.WAITING, ITEM, new User(4L, "Mike", "mike@gmail.com"));
     @Autowired
     private JacksonTester<ItemDto> testerDto;
 

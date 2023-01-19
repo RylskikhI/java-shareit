@@ -26,12 +26,12 @@ public class CommentJsonTest {
             .create();
     private static final Item ITEM = Item.builder()
             .id(1L)
-            .name("Drill")
-            .description("Drill 2000 MaxPro")
+            .name("Saw")
+            .description("Circular Saw")
             .available(true)
             .build();
-    private static final User AUTHOR = new User(1L, "Nikolas", "nik@mail.ru");
-    private static final Comment COMMENT = new Comment(1L, "Good drill!", LocalDateTime.now(), ITEM, AUTHOR);
+    private static final User AUTHOR = new User(1L, "John", "john@gmail.com");
+    private static final Comment COMMENT = new Comment(1L, "Perfect saw!", LocalDateTime.now(), ITEM, AUTHOR);
     @Autowired
     private JacksonTester<CommentDto> testerDto;
     @Autowired
@@ -47,7 +47,7 @@ public class CommentJsonTest {
     }
 
     @Test
-    void commentInfoDtoSerialize() throws IOException {
+    void commentWithInfoDtoSerialize() throws IOException {
         CommentWithInfoDto dto = CommentMapper.mapToCommentInfoDto(COMMENT);
         JsonContent<CommentWithInfoDto> json = testerWithInfoDto.write(dto);
 
@@ -68,7 +68,7 @@ public class CommentJsonTest {
     }
 
     @Test
-    void commentDtoInfoDeserialize() throws IOException {
+    void commentWithInfoDtoDeserialize() throws IOException {
         CommentWithInfoDto dto = CommentMapper.mapToCommentInfoDto(COMMENT);
         String content = gson.toJson(dto);
         CommentWithInfoDto result = testerWithInfoDto.parse(content).getObject();

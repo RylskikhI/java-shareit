@@ -46,12 +46,12 @@ public class ItemDbTest {
 
     @BeforeEach
     void init() {
-        owner = new User(null, "Maks", "maks@mail.ru");
-        requestor = new User(null, "Bob", "bob@mail.ru");
-        request = new ItemRequest(null, "Good drill!", LocalDateTime.now(), requestor);
+        owner = new User(null, "John", "john@gmail.com");
+        requestor = new User(null, "Fred", "fred@gmail.com");
+        request = new ItemRequest(null, "Perfect saw!", LocalDateTime.now(), requestor);
         item = Item.builder()
-                .name("Drill")
-                .description("Drill MaxPro 2000")
+                .name("Saw")
+                .description("Circular saw")
                 .available(true)
                 .owner(owner)
                 .request(request)
@@ -67,7 +67,7 @@ public class ItemDbTest {
     }
 
     @Test
-    void findById() {
+    void getItemById() {
         ItemDto dto = makeItem(item);
         TypedQuery<Long> query = em.createQuery("select i.id from Item as i where i.id = :id", Long.class);
         Long id = query
@@ -83,7 +83,7 @@ public class ItemDbTest {
     }
 
     @Test
-    void findAll() {
+    void getAllItems() {
         ItemDto dto = makeItem(item);
         TypedQuery<Item> query = em.createQuery("select i from Item as i where i.owner.id = :id", Item.class);
         List<Item> result = query
@@ -96,10 +96,10 @@ public class ItemDbTest {
     }
 
     @Test
-    void findAllByText() {
+    void search() {
         ItemDto dto = makeItem(item);
         Pageable pageable = PageRequest.of(0, 10);
-        String text = "Drill";
+        String text = "Saw";
         TypedQuery<Item> query = em.createQuery("select i from Item as i where i.available = true and " +
                 "lower(i.name) like lower(concat('%', :text, '%')) " +
                 "or lower(i.description) like lower(concat('%', :text, '%'))", Item.class);
@@ -113,7 +113,7 @@ public class ItemDbTest {
     }
 
     @Test
-    void save() {
+    void addItem() {
         ItemDto dto = makeItem(item);
         TypedQuery<Item> query = em.createQuery("select i from Item as i where i.owner.email = :email", Item.class);
         item = query
@@ -129,7 +129,7 @@ public class ItemDbTest {
     }
 
     @Test
-    void update() {
+    void updateItem() {
         ItemDto dto = makeItem(item);
         TypedQuery<Item> query = em.createQuery("select i from Item as i where i.id = :id", Item.class);
         item = query
@@ -138,8 +138,8 @@ public class ItemDbTest {
 
         Item newItem = Item.builder()
                 .id(item.getId())
-                .name("Saw")
-                .description("Saw 2000")
+                .name("Fan")
+                .description("Fan Dyson")
                 .available(true)
                 .owner(item.getOwner())
                 .request(item.getRequest())
@@ -156,7 +156,7 @@ public class ItemDbTest {
     }
 
     @Test
-    void deleteById() {
+    void deleteItem() {
         ItemDto dto = makeItem(item);
         TypedQuery<Long> query = em.createQuery("select i.id from Item as i where i.id = :id", Long.class);
         Long id = query

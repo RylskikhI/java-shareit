@@ -33,13 +33,13 @@ public class ItemRepositoryTest {
 
     @BeforeEach
     void init() {
-        owner = new User(null, "Nikolas", "nik@mail.ru");
-        requestor = new User(null, "Djon", "djon@mail.ru");
-        request = new ItemRequest(null, "Drill 2000 MaxPro", LocalDateTime.now(), requestor);
+        owner = new User(null, "John", "john@gmail.com");
+        requestor = new User(null, "Fred", "fred@gmail.com");
+        request = new ItemRequest(null, "Circular saw", LocalDateTime.now(), requestor);
         item = Item.builder()
                 .id(null)
-                .name("Drill")
-                .description("Drill 2000 MaxPro")
+                .name("Saw")
+                .description("Circular saw")
                 .available(true)
                 .owner(owner)
                 .request(request)
@@ -88,9 +88,9 @@ public class ItemRepositoryTest {
     }
 
     @Test
-    void findAllByText() {
+    void search() {
         Pageable pageable = PageRequest.of(0, 10);
-        Page<Item> items = itemRepository.search("Drill", pageable);
+        Page<Item> items = itemRepository.search("Saw", pageable);
 
         assertNotNull(owner.getId());
         assertNotNull(requestor.getId());

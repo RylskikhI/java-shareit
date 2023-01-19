@@ -49,12 +49,12 @@ class BookingServiceTest {
 
     @BeforeEach
     void init() {
-        owner = new User(1L, "Nikolas", "nik@mail.ru");
-        booker = new User(2L, "Djon", "djon@mail.ru");
+        owner = new User(1L, "John", "john@gmail.com");
+        booker = new User(2L, "Fred", "fred@gmail.com");
         item = Item.builder()
                 .id(1L)
-                .name("Drill")
-                .description("Drill 2000 MaxPro")
+                .name("Saw")
+                .description("Circular saw")
                 .available(true)
                 .owner(owner)
                 .build();
@@ -70,7 +70,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void findById() {
+    void findBookingById() {
         Mockito.when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
         Mockito.when(bookingRepository.findById(booking.getId())).thenReturn(Optional.of(booking));
 
@@ -89,7 +89,7 @@ class BookingServiceTest {
 
     @ParameterizedTest
     @ValueSource(longs = {11, 12, 32, 999})
-    void findByNotValidUserId(Long userId) {
+    void findBookingByNotValidUserId(Long userId) {
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
             bookingService.findBookingById(userId, booking.getId());
         });
@@ -102,7 +102,7 @@ class BookingServiceTest {
 
     @ParameterizedTest
     @ValueSource(longs = {11, 12, 32, 999})
-    void findByNotValidId(Long id) {
+    void findBookingByNotValidId(Long id) {
         Mockito.when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
 
         BookingNotFoundException exception = assertThrows(BookingNotFoundException.class, () -> {
@@ -119,7 +119,7 @@ class BookingServiceTest {
 
     @ParameterizedTest
     @ValueSource(longs = {11, 12, 32, 999})
-    void findByOtherUserNotValidUserId(Long userId) {
+    void findBookingByOtherUserNotValidUserId(Long userId) {
         Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(new User()));
         Mockito.when(bookingRepository.findById(booking.getId())).thenReturn(Optional.of(booking));
 
@@ -138,7 +138,7 @@ class BookingServiceTest {
 
     @ParameterizedTest
     @ValueSource(longs = {11, 12, 32, 999})
-    void findAllByBookerNotValidUserId(Long userId) {
+    void findAllBookingsByBookerNotValidUserId(Long userId) {
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
             bookingService.findAllByBookerId(userId, BookingState.ALL.name(), 0, 10);
         });
@@ -151,7 +151,7 @@ class BookingServiceTest {
 
     @ParameterizedTest
     @ValueSource(strings = {" ", "", "PPS", "VENICE"})
-    void findAllByBookerNotValidBookingState(String state) {
+    void findAllBookingsByBookerNotValidBookingState(String state) {
         Mockito.when(userRepository.findById(booker.getId())).thenReturn(Optional.of(booker));
 
         BookingStateExistsException exception = assertThrows(BookingStateExistsException.class, () -> {
@@ -168,7 +168,7 @@ class BookingServiceTest {
 
     @ParameterizedTest
     @ValueSource(longs = {11, 12, 32, 999})
-    void findAllByItemOwnerNotValidUserId(Long userId) {
+    void findAllBookingsByItemOwnerNotValidUserId(Long userId) {
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
             bookingService.findAllByItemOwnerId(userId, BookingState.ALL.name(), 0, 10);
         });
@@ -180,7 +180,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void save() {
+    void createBooking() {
         Mockito.when(userRepository.findById(booker.getId())).thenReturn(Optional.of(booker));
         Mockito.when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
         Mockito.when(bookingRepository.save(Mockito.any())).thenReturn(booking);
@@ -200,7 +200,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void saveByOwner() {
+    void createBookingByOwner() {
         Mockito.when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
         Mockito.when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
 
@@ -219,7 +219,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void saveByNotValidAvailable() {
+    void createBookingByNotValidAvailable() {
         item.setAvailable(false);
         Mockito.when(userRepository.findById(booker.getId())).thenReturn(Optional.of(booker));
         Mockito.when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
@@ -239,7 +239,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void saveByNotValidUserId() {
+    void createBookingByNotValidUserId() {
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
             BookingDto dto = BookingMapper.mapToBookingDtoWithIds(booking);
             bookingService.createBooking(booker.getId(), dto);
@@ -252,7 +252,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void saveByNotValidItemId() {
+    void createBookingByNotValidItemId() {
         Mockito.when(userRepository.findById(booker.getId())).thenReturn(Optional.of(booker));
 
         ItemNotFoundException exception = assertThrows(ItemNotFoundException.class, () -> {
@@ -270,7 +270,7 @@ class BookingServiceTest {
 
     @ParameterizedTest
     @ValueSource(booleans = {false, true})
-    void update(Boolean approved) {
+    void updateBooking(Boolean approved) {
         Mockito.when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
         Mockito.when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
         Mockito.when(bookingRepository.findById(booking.getId())).thenReturn(Optional.of(booking));
@@ -294,7 +294,7 @@ class BookingServiceTest {
 
     @ParameterizedTest
     @ValueSource(longs = {11, 12, 32, 999})
-    void updateByNotValidUserId(Long userId) {
+    void updateBookingByNotValidUserId(Long userId) {
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
             bookingService.updateBooking(userId, booking.getId(), false);
         });
@@ -306,7 +306,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void updateByBooker() {
+    void updateBookingByBooker() {
         Mockito.when(userRepository.findById(booker.getId())).thenReturn(Optional.of(booker));
         Mockito.when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
         Mockito.when(bookingRepository.findById(booking.getId())).thenReturn(Optional.of(booking));
@@ -326,7 +326,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void updateByNotValidItemId() {
+    void updateBookingByNotValidItemId() {
         Mockito.when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
         Mockito.when(bookingRepository.findById(booking.getId())).thenReturn(Optional.of(booking));
 
@@ -344,7 +344,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void updateByNotValidId() {
+    void updateBookingByNotValidId() {
         Mockito.when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
 
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
@@ -360,7 +360,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void deleteById() {
+    void deleteBookingById() {
         Mockito.when(userRepository.findById(booker.getId())).thenReturn(Optional.of(booker));
         Mockito.when(bookingRepository.findById(booking.getId())).thenReturn(Optional.of(booking));
 
@@ -371,7 +371,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void deleteByNotValidUserId() {
+    void deleteBookingByNotValidUserId() {
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
             bookingService.deleteBookingById(booker.getId(), booking.getId());
         });
@@ -383,7 +383,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void deleteByNotValidId() {
+    void deleteBookingByNotValidId() {
         Mockito.when(userRepository.findById(booker.getId())).thenReturn(Optional.of(booker));
 
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
@@ -400,7 +400,7 @@ class BookingServiceTest {
 
     @ParameterizedTest
     @ValueSource(longs = {11, 12, 32, 999})
-    void deleteByOtherUserNotValidUserId(Long userId) {
+    void deleteBookingByOtherUserNotValidUserId(Long userId) {
         Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(new User()));
         Mockito.when(bookingRepository.findById(booking.getId())).thenReturn(Optional.of(booking));
 

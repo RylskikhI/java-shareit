@@ -7,11 +7,11 @@ import ru.practicum.shareit.user.dto.BookerDto;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserMapperTest {
-    private static final User USER = new User(1L, "Nikolas", "nik@mail.ru");
+    private static final User USER = new User(1L, "John", "john@gmail.com");
     private static final UserDto DTO = UserMapper.mapToUserDto(USER);
 
     @Test
-    void toUserDto() {
+    void mapToUserDto() {
         UserDto dto = UserMapper.mapToUserDto(USER);
 
         assertEquals(dto.getId(), USER.getId());
@@ -20,14 +20,14 @@ class UserMapperTest {
     }
 
     @Test
-    void toBookerDto() {
+    void mapToBookerDto() {
         BookerDto dto = UserMapper.toBookerDto(USER);
 
         assertEquals(dto.getId(), USER.getId());
     }
 
     @Test
-    void toUser() {
+    void mapToUser() {
         User user = UserMapper.mapToUser(DTO);
 
         assertEquals(user.getId(), DTO.getId());

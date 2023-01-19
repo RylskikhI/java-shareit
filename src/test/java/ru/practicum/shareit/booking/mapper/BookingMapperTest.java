@@ -11,12 +11,12 @@ import ru.practicum.shareit.booking.model.BookingStatus;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BookingMapperTest {
-    private static final User OWNER = new User(1L, "Nikolas", "nik@mail.ru");
-    private static final User BOOKER = new User(2L, "Bob", "bob@mail.ru");
+    private static final User OWNER = new User(1L, "John", "john@@gmail.com");
+    private static final User BOOKER = new User(2L, "Fred", "fred@@gmail.com");
     private static final Item ITEM = Item.builder()
             .id(1L)
-            .name("Drill")
-            .description("Drill 2000 MaxPro")
+            .name("Saw")
+            .description("Circular saw")
             .available(true)
             .owner(OWNER)
             .build();
@@ -25,7 +25,7 @@ class BookingMapperTest {
     private static final BookingDto DTO = BookingMapper.mapToBookingDtoWithIds(BOOKING);
 
     @Test
-    void toBookingDto() {
+    void mapToBookingDto() {
         BookingDto dto = BookingMapper.mapToBookingDtoWithIds(BOOKING);
 
         assertEquals(dto.getId(), BOOKING.getId());
@@ -36,7 +36,7 @@ class BookingMapperTest {
     }
 
     @Test
-    void toBookingDtoInfo() {
+    void mapToBookingDtoWithEntities() {
         BookingDtoWithEntities dto = BookingMapper.mapToBookingDtoWithEntities(BOOKING);
 
         assertEquals(dto.getId(), BOOKING.getId());
@@ -48,7 +48,7 @@ class BookingMapperTest {
     }
 
     @Test
-    void toBooking() {
+    void mapToBooking() {
         Booking booking = BookingMapper.mapToBooking(DTO, BookingStatus.WAITING, ITEM, BOOKER);
 
         assertEquals(booking.getId(), DTO.getId());

@@ -38,7 +38,7 @@ public class ItemRequestDbTest {
     @BeforeEach
     void init() {
         requestor = new User(null, "Eric", "eric@yahoo.com");
-        request = new ItemRequest(null, "Good item!", LocalDateTime.now(), requestor);
+        request = new ItemRequest(null, "Want to rent circular saw!", LocalDateTime.now(), requestor);
     }
 
     @AfterEach
@@ -64,7 +64,7 @@ public class ItemRequestDbTest {
     }
 
     @Test
-    void findAllRequestsMadeByOwner() {
+    void getAllRequestsMadeByOwner() {
         makeItemRequests();
         TypedQuery<ItemRequest> query = em.createQuery("select r from ItemRequest as r where r.requestor.id = :id",
                 ItemRequest.class);

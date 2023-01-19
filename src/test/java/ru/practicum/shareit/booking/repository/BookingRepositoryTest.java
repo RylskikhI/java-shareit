@@ -32,12 +32,12 @@ public class BookingRepositoryTest {
 
     @BeforeEach
     void init() {
-        owner = new User(null, "Nikolas", "nik@mail.ru");
-        booker = new User(null, "Djon", "djon@mail.ru");
+        owner = new User(null, "John", "john@gmail.com");
+        booker = new User(null, "Fred", "fred@gmail.com");
         item = Item.builder()
                 .id(null)
-                .name("Drill")
-                .description("Drill 2000 MaxPro")
+                .name("Saw")
+                .description("Circular saw")
                 .available(true)
                 .owner(owner)
                 .build();

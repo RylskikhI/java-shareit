@@ -27,13 +27,13 @@ public class ItemRequestRepositoryTest {
 
     @BeforeEach
     void init() {
-        owner = new User(null, "Nikolas", "nik@mail.ru");
-        requestor = new User(null, "Djon", "djon@mail.ru");
-        request = new ItemRequest(null, "Drill 2000 MaxPro", LocalDateTime.now(), requestor);
+        owner = new User(null, "John", "john@gmail.com");
+        requestor = new User(null, "Fred", "fred@gmail.com");
+        request = new ItemRequest(null, "Circular saw", LocalDateTime.now(), requestor);
         item = Item.builder()
                 .id(null)
-                .name("Drill")
-                .description("Drill 2000 MaxPro")
+                .name("Saw")
+                .description("Circular saw")
                 .available(true)
                 .owner(owner)
                 .request(request)

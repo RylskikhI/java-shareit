@@ -68,8 +68,8 @@ public class BookingDbTest {
     }
 
     @Test
-    void findById() {
-        BookingDtoWithEntities dto = makeBooking(booking);
+    void findBookingById() {
+        BookingDtoWithEntities dto = addBooking(booking);
         TypedQuery<Long> query = em.createQuery("select b.id from Booking as b where b.id = :id", Long.class);
         Long id = query
                 .setParameter("id", dto.getId())
@@ -87,7 +87,7 @@ public class BookingDbTest {
 
     @Test
     void findAllByBookerId() {
-        BookingDtoWithEntities dto = makeBooking(booking);
+        BookingDtoWithEntities dto = addBooking(booking);
         TypedQuery<Booking> query = em.createQuery("select b from Booking as b where b.booker.id = :id", Booking.class);
         List<Booking> result = query
                 .setParameter("id", booker.getId())
@@ -100,7 +100,7 @@ public class BookingDbTest {
 
     @Test
     void findAllByItemOwnerId() {
-        BookingDtoWithEntities dto = makeBooking(booking);
+        BookingDtoWithEntities dto = addBooking(booking);
         TypedQuery<Booking> query = em.createQuery("select b from Booking as b where b.item.owner.id = :id",
                 Booking.class);
         List<Booking> result = query
@@ -113,8 +113,8 @@ public class BookingDbTest {
     }
 
     @Test
-    void save() {
-        BookingDtoWithEntities dto = makeBooking(booking);
+    void createBooking() {
+        BookingDtoWithEntities dto = addBooking(booking);
         TypedQuery<Booking> query = em.createQuery("select b from Booking as b where b.booker.email = :email", Booking.class);
         booking = query
                 .setParameter("email", booker.getEmail())
@@ -129,8 +129,8 @@ public class BookingDbTest {
     }
 
     @Test
-    void deleteById() {
-        BookingDtoWithEntities dto = makeBooking(booking);
+    void deleteBookingById() {
+        BookingDtoWithEntities dto = addBooking(booking);
         TypedQuery<Long> query = em.createQuery("select b.id from Booking as b where b.id = :id", Long.class);
         Long id = query
                 .setParameter("id", dto.getId())
@@ -147,7 +147,7 @@ public class BookingDbTest {
         assertEquals(expectedMessage, actualMessage);
     }
 
-    private BookingDtoWithEntities makeBooking(Booking booking) {
+    private BookingDtoWithEntities addBooking(Booking booking) {
         UserDto userDto = UserMapper.mapToUserDto(owner);
         userDto = userService.saveUser(userDto);
         owner.setId(userDto.getId());
