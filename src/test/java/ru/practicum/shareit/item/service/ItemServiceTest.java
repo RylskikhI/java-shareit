@@ -380,7 +380,7 @@ class ItemServiceTest {
     }
 
     @Test
-    void saveComment() {
+    void addComment() {
         Mockito.when(userRepository.findById(BOOKER.getId())).thenReturn(Optional.of(BOOKER));
         Mockito.when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
         Mockito.when(bookingRepository.findAllByItemId(item.getId())).thenReturn(List.of(LAST_BOOKING));

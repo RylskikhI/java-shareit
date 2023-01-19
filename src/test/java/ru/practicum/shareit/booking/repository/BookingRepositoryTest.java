@@ -20,7 +20,7 @@ import ru.practicum.shareit.booking.model.BookingStatus;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-public class BookingRepoTest {
+public class BookingRepositoryTest {
     private User owner;
     private User booker;
     private Item item;

@@ -150,7 +150,7 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
-    private List<BookingDtoWithEntities> findAllByState(BookingState state, List<Booking> bookings) {
+    public List<BookingDtoWithEntities> findAllByState(BookingState state, List<Booking> bookings) {
         final LocalDateTime currentTime = LocalDateTime.now();
 
         switch (state) {

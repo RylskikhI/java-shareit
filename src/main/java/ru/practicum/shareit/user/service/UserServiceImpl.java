@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.exception.DuplicateException;
 import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -12,7 +11,6 @@ import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -40,17 +38,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> getAllUsers() {
         log.info("Запрошены все пользователи");
-        try {
-            List<User> users = userRepository.findAllCustom();
-            if (users.isEmpty()) {
-                log.warn("Список пользователей пуст");
-                return Collections.emptyList();
-            }
-            return UserMapper.mapToUserDto(users);
-        } catch (Exception e) {
-            log.error("Ошибка при получении списка пользователей", e);
-            throw e;
-        }
+        List<User> users = userRepository.findAllCustom();
+        return UserMapper.mapToUserDto(users);
     }
 
     @Transactional
@@ -66,7 +55,7 @@ public class UserServiceImpl implements UserService {
             if (userValidation(updatedUser)) {
                 user.setEmail(updatedUser.getEmail());
             } else {
-                throw new DuplicateException("Не удалось обновить данные пользователя. "
+                throw new SecurityException("Не удалось обновить данные пользователя. "
                         + "Пользователь с таким email уже существует");
             }
         }
@@ -91,12 +80,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private boolean userValidation(UserDto userDto) {
-        boolean isValidated = true;
-
-        if (userDto.getEmail() == null) {
-            isValidated = false;
-            log.warn("Email не может быть null");
-        }
+        boolean isValidated = userDto.getEmail() != null;
 
         return isValidated;
     }

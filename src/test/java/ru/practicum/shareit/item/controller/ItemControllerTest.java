@@ -6,9 +6,9 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.mockito.Mockito;
-import ru.practicum.shareit.exception.CommentException;
 import ru.practicum.shareit.exception.ItemNotFoundException;
 import ru.practicum.shareit.exception.UserNotFoundException;
+import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.dto.CommentWithInfoDto;
 import ru.practicum.shareit.item.mapper.CommentMapper;
 import ru.practicum.shareit.item.mapper.ItemMapper;
@@ -160,7 +160,7 @@ class ItemControllerTest {
     @DisplayName("Send POST request /items/{id}/comment")
     void saveCommentByNotBooker() throws Exception {
         CommentDto commentDto = CommentMapper.mapToCommentDto(comment);
-        Mockito.when(itemService.addComment(Mockito.any(), Mockito.anyLong(), Mockito.anyLong())).thenThrow(CommentException.class);
+        Mockito.when(itemService.addComment(Mockito.any(), Mockito.anyLong(), Mockito.anyLong())).thenThrow(ValidationException.class);
 
         this.mockMvc.perform(MockMvcRequestBuilders
                         .post("/items/{id}/comment", item.getId())

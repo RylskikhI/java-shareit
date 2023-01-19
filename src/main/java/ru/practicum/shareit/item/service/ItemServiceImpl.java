@@ -199,10 +199,10 @@ public class ItemServiceImpl implements ItemService {
 
         if (bookings.size() != 0) {
             if (bookings.stream().noneMatch(t -> t.getEnd().isBefore(LocalDateTime.now()))) {
-                throw new CommentException("Дата бронирования еще не наступила");
+                throw new BookingStatusException("Дата бронирования еще не наступила");
             }
         } else {
-            throw new CommentException(String.format("Пользователь userId=%d не брал вещь в аренду!", userId));
+            throw new ValidationException(String.format("Пользователь userId=%d не брал вещь в аренду!", userId));
         }
 
         final Comment comment = CommentMapper.mapToComment(commentDto, item, user);

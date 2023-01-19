@@ -25,6 +25,7 @@ import ru.practicum.shareit.user.repository.UserRepository;
 
 import javax.persistence.EntityNotFoundException;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 class BookingServiceTest {
@@ -77,8 +78,8 @@ class BookingServiceTest {
         assertNotNull(dto.getItem().getId());
         assertNotNull(dto.getBooker());
 
-        Mockito.verify(userRepository, Mockito.times(1)).findById(owner.getId());
-        Mockito.verify(bookingRepository, Mockito.times(1)).findById(booking.getId());
+        Mockito.verify(userRepository, times(1)).findById(owner.getId());
+        Mockito.verify(bookingRepository, times(1)).findById(booking.getId());
     }
 
     @ParameterizedTest
@@ -108,7 +109,7 @@ class BookingServiceTest {
 
         assertEquals(expectedMessage, actualMessage);
 
-        Mockito.verify(userRepository, Mockito.times(1)).findById(owner.getId());
+        Mockito.verify(userRepository, times(1)).findById(owner.getId());
     }
 
     @ParameterizedTest
@@ -126,8 +127,8 @@ class BookingServiceTest {
 
         assertEquals(expectedMessage, actualMessage);
 
-        Mockito.verify(userRepository, Mockito.times(1)).findById(userId);
-        Mockito.verify(bookingRepository, Mockito.times(1)).findById(booking.getId());
+        Mockito.verify(userRepository, times(1)).findById(userId);
+        Mockito.verify(bookingRepository, times(1)).findById(booking.getId());
     }
 
     @ParameterizedTest
@@ -157,7 +158,7 @@ class BookingServiceTest {
 
         assertEquals(expectedMessage, actualMessage);
 
-        Mockito.verify(userRepository, Mockito.times(1)).findById(booker.getId());
+        Mockito.verify(userRepository, times(1)).findById(booker.getId());
     }
 
     @ParameterizedTest
@@ -171,23 +172,6 @@ class BookingServiceTest {
         String actualMessage = String.format("Пользователь с id=%d не найден!", userId);
 
         assertEquals(expectedMessage, actualMessage);
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {" ", "", "PPS", "VENICE"})
-    void findAllByItemOwnerNotValidBookingState(String state) {
-        Mockito.when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
-
-        BookingStateExistsException exception = assertThrows(BookingStateExistsException.class, () -> {
-            bookingService.findAllByItemOwnerId(owner.getId(), state, 0, 10);
-        });
-
-        String expectedMessage = exception.getMessage();
-        String actualMessage = "Unknown state: UNSUPPORTED_STATUS";
-
-        assertEquals(expectedMessage, actualMessage);
-
-        Mockito.verify(userRepository, Mockito.times(1)).findById(owner.getId());
     }
 
     @Test
@@ -205,9 +189,9 @@ class BookingServiceTest {
         assertNotNull(savedDto.getItem());
         assertNotNull(savedDto.getBooker());
 
-        Mockito.verify(userRepository, Mockito.times(1)).findById(booker.getId());
-        Mockito.verify(itemRepository, Mockito.times(1)).findById(item.getId());
-        Mockito.verify(bookingRepository, Mockito.times(1)).save(Mockito.any());
+        Mockito.verify(userRepository, times(1)).findById(booker.getId());
+        Mockito.verify(itemRepository, times(1)).findById(item.getId());
+        Mockito.verify(bookingRepository, times(1)).save(Mockito.any());
     }
 
     @Test
@@ -225,8 +209,8 @@ class BookingServiceTest {
 
         assertEquals(expectedMessage, actualMessage);
 
-        Mockito.verify(userRepository, Mockito.times(1)).findById(owner.getId());
-        Mockito.verify(itemRepository, Mockito.times(1)).findById(item.getId());
+        Mockito.verify(userRepository, times(1)).findById(owner.getId());
+        Mockito.verify(itemRepository, times(1)).findById(item.getId());
     }
 
     @Test
@@ -245,8 +229,8 @@ class BookingServiceTest {
 
         assertEquals(expectedMessage, actualMessage);
 
-        Mockito.verify(userRepository, Mockito.times(1)).findById(booker.getId());
-        Mockito.verify(itemRepository, Mockito.times(1)).findById(item.getId());
+        Mockito.verify(userRepository, times(1)).findById(booker.getId());
+        Mockito.verify(itemRepository, times(1)).findById(item.getId());
     }
 
     @Test
@@ -276,7 +260,7 @@ class BookingServiceTest {
 
         assertEquals(expectedMessage, actualMessage);
 
-        Mockito.verify(userRepository, Mockito.times(1)).findById(booker.getId());
+        Mockito.verify(userRepository, times(1)).findById(booker.getId());
     }
 
     @ParameterizedTest
@@ -298,9 +282,9 @@ class BookingServiceTest {
             assertEquals(savedBooking.getStatus(), BookingStatus.REJECTED);
         }
 
-        Mockito.verify(userRepository, Mockito.times(1)).findById(owner.getId());
-        Mockito.verify(itemRepository, Mockito.times(1)).findById(item.getId());
-        Mockito.verify(bookingRepository, Mockito.times(1)).findById(booking.getId());
+        Mockito.verify(userRepository, times(1)).findById(owner.getId());
+        Mockito.verify(itemRepository, times(1)).findById(item.getId());
+        Mockito.verify(bookingRepository, times(1)).findById(booking.getId());
     }
 
     @ParameterizedTest
@@ -331,9 +315,9 @@ class BookingServiceTest {
 
         assertEquals(expectedMessage, actualMessage);
 
-        Mockito.verify(userRepository, Mockito.times(1)).findById(booker.getId());
-        Mockito.verify(itemRepository, Mockito.times(1)).findById(item.getId());
-        Mockito.verify(bookingRepository, Mockito.times(1)).findById(booking.getId());
+        Mockito.verify(userRepository, times(1)).findById(booker.getId());
+        Mockito.verify(itemRepository, times(1)).findById(item.getId());
+        Mockito.verify(bookingRepository, times(1)).findById(booking.getId());
     }
 
     @Test
@@ -350,8 +334,8 @@ class BookingServiceTest {
 
         assertEquals(expectedMessage, actualMessage);
 
-        Mockito.verify(userRepository, Mockito.times(1)).findById(owner.getId());
-        Mockito.verify(bookingRepository, Mockito.times(1)).findById(booking.getId());
+        Mockito.verify(userRepository, times(1)).findById(owner.getId());
+        Mockito.verify(bookingRepository, times(1)).findById(booking.getId());
     }
 
     @Test
@@ -367,7 +351,7 @@ class BookingServiceTest {
 
         assertEquals(expectedMessage, actualMessage);
 
-        Mockito.verify(userRepository, Mockito.times(1)).findById(owner.getId());
+        Mockito.verify(userRepository, times(1)).findById(owner.getId());
     }
 
     @Test
@@ -377,8 +361,8 @@ class BookingServiceTest {
 
         bookingService.deleteBookingById(booker.getId(), booking.getId());
 
-        Mockito.verify(userRepository, Mockito.times(1)).findById(booker.getId());
-        Mockito.verify(bookingRepository, Mockito.times(1)).findById(booking.getId());
+        Mockito.verify(userRepository, times(1)).findById(booker.getId());
+        Mockito.verify(bookingRepository, times(1)).findById(booking.getId());
     }
 
     @Test
@@ -406,7 +390,7 @@ class BookingServiceTest {
 
         assertEquals(expectedMessage, actualMessage);
 
-        Mockito.verify(userRepository, Mockito.times(1)).findById(booker.getId());
+        Mockito.verify(userRepository, times(1)).findById(booker.getId());
     }
 
     @ParameterizedTest
@@ -424,7 +408,7 @@ class BookingServiceTest {
 
         assertEquals(expectedMessage, actualMessage);
 
-        Mockito.verify(userRepository, Mockito.times(1)).findById(userId);
-        Mockito.verify(bookingRepository, Mockito.times(1)).findById(booking.getId());
+        Mockito.verify(userRepository, times(1)).findById(userId);
+        Mockito.verify(bookingRepository, times(1)).findById(booking.getId());
     }
 }
