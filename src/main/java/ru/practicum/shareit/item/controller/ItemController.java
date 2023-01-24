@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.CommentWithInfoDto;
@@ -23,8 +24,10 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDto> getAllItems(@RequestHeader("X-Sharer-User-Id") Long userId) {
-        return itemService.getItems(userId);
+    public List<ItemDto> getAllItems(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                     @RequestParam(name = "page", defaultValue = "0") int page,
+                                     @RequestParam(name = "size", defaultValue = "10") int size) {
+        return itemService.getItems(userId, page, size);
     }
 
     @GetMapping("/{itemId}")
@@ -47,13 +50,13 @@ public class ItemController {
     @PatchMapping("/{itemId}")
     public ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") long userId,
                            @PathVariable long itemId,
-                           @RequestBody Item item) {
-        return itemService.updateItem(userId, itemId, item);
+                           @RequestBody ItemDto itemDto) {
+        return itemService.updateItem(userId, itemId, itemDto);
     }
 
     @GetMapping("/search")
-    public List<Item> searchItems(@RequestParam String text) {
-        return itemService.searchItem(text);
+    public List<Item> searchItems(@RequestParam String text, Pageable pageable) {
+        return itemService.searchItem(text, pageable);
     }
 
     @PostMapping("/{id}/comment")

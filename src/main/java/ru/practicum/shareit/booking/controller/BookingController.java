@@ -7,6 +7,8 @@ import ru.practicum.shareit.booking.dto.BookingDtoWithEntities;
 import ru.practicum.shareit.booking.service.BookingService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RestController
@@ -33,20 +35,24 @@ public class BookingController {
 
     @GetMapping
     public List<BookingDtoWithEntities> findAllByBookerId(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                              @RequestParam(name = "state", defaultValue = "ALL") String state) {
-        return bookingService.findAllByBookerId(userId, state);
+                                                          @RequestParam(name = "state", defaultValue = "ALL") String state,
+                                                          @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
+                                                          @RequestParam(name = "size", defaultValue = "10") @Positive Integer size) {
+        return bookingService.findAllByBookerId(userId, state, from, size);
     }
 
     @GetMapping("/owner")
     public List<BookingDtoWithEntities> findAllByItemOwnerId(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                                     @RequestParam(name = "state", defaultValue = "ALL") String state) {
-        return bookingService.findAllByItemOwnerId(userId, state);
+                                                             @RequestParam(name = "state", defaultValue = "ALL") String state,
+                                                             @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
+                                                             @RequestParam(name = "size", defaultValue = "10") @Positive Integer size) {
+        return bookingService.findAllByItemOwnerId(userId, state, from, size);
     }
 
     @PatchMapping("/{id}")
     public BookingDtoWithEntities updateBooking(@RequestHeader("X-Sharer-User-Id") Long userId,
                                                 @Valid @PathVariable Long id,
-                                                @RequestParam(name = "approved") String approved) {
+                                                @RequestParam(name = "approved") Boolean approved) {
         return bookingService.updateBooking(userId, id, approved);
     }
 
