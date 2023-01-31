@@ -2,7 +2,6 @@ package ru.practicum.shareit.user.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
-import org.springframework.validation.annotation.Validated;
 import ru.practicum.shareit.user.dto.UserDto;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
