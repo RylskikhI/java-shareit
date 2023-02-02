@@ -87,7 +87,7 @@ public class BookingDbTest {
 
     @Test
     void findAllByBookerId() {
-        BookingDtoWithEntities dto = addBooking(booking);
+        addBooking(booking);
         TypedQuery<Booking> query = em.createQuery("select b from Booking as b where b.booker.id = :id", Booking.class);
         List<Booking> result = query
                 .setParameter("id", booker.getId())
@@ -100,7 +100,7 @@ public class BookingDbTest {
 
     @Test
     void findAllByItemOwnerId() {
-        BookingDtoWithEntities dto = addBooking(booking);
+        addBooking(booking);
         TypedQuery<Booking> query = em.createQuery("select b from Booking as b where b.item.owner.id = :id",
                 Booking.class);
         List<Booking> result = query
@@ -141,8 +141,8 @@ public class BookingDbTest {
             bookingService.findBookingById(owner.getId(), id);
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Бронирование с id=%d не найдено!", id);
+        String expectedMessage = String.format("Бронирование с id=%d не найдено!", id);
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
     }

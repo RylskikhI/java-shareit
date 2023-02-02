@@ -27,14 +27,14 @@ class ItemRequestMapperTest {
                 ItemRequestMapper.mapToItemRequestDto(REQUEST) :
                 ItemRequestMapper.mapToItemRequestDto(REQUEST, items);
 
-        assertEquals(dto.getId(), REQUEST.getId());
-        assertEquals(dto.getDescription(), REQUEST.getDescription());
-        assertEquals(dto.getCreated(), REQUEST.getCreated());
+        assertEquals(REQUEST.getId(), dto.getId());
+        assertEquals(REQUEST.getDescription(), dto.getDescription());
+        assertEquals(REQUEST.getCreated(), dto.getCreated());
 
         if (items == null) {
             assertNull(dto.getItems());
         } else {
-            assertEquals(dto.getItems().size(), 0);
+            assertEquals(0, dto.getItems().size());
         }
     }
 
@@ -42,9 +42,9 @@ class ItemRequestMapperTest {
     void mapToItemRequest() {
         ItemRequest request = ItemRequestMapper.mapToItemRequest(DTO, REQUESTOR);
 
-        assertEquals(request.getId(), DTO.getId());
-        assertEquals(request.getDescription(), DTO.getDescription());
-        assertEquals(request.getRequestor(), REQUESTOR);
+        assertEquals(DTO.getId(), request.getId());
+        assertEquals(DTO.getDescription(), request.getDescription());
+        assertEquals(REQUESTOR, request.getRequestor());
     }
 
     private static Stream<Arguments> getRequest() {

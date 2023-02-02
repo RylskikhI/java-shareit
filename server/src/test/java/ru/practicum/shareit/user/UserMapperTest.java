@@ -15,24 +15,24 @@ class UserMapperTest {
     void mapToUserDto() {
         UserDto dto = UserMapper.mapToUserDto(USER);
 
-        assertEquals(dto.getId(), USER.getId());
-        assertEquals(dto.getName(), USER.getName());
-        assertEquals(dto.getEmail(), USER.getEmail());
+        assertEquals(USER.getId(), dto.getId());
+        assertEquals(USER.getName(), dto.getName());
+        assertEquals(USER.getEmail(), dto.getEmail());
     }
 
     @Test
     void mapToBookerDto() {
         BookerDto dto = UserMapper.toBookerDto(USER);
 
-        assertEquals(dto.getId(), USER.getId());
+        assertEquals(USER.getId(), dto.getId());
     }
 
     @Test
     void mapToUser() {
         User user = UserMapper.mapToUser(DTO);
 
-        assertEquals(user.getId(), DTO.getId());
-        assertEquals(user.getName(), DTO.getName());
-        assertEquals(user.getEmail(), DTO.getEmail());
+        assertEquals(DTO.getId(), user.getId());
+        assertEquals(DTO.getName(), user.getName());
+        assertEquals(DTO.getEmail(), user.getEmail());
     }
 }

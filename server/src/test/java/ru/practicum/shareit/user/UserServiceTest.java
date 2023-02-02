@@ -43,9 +43,9 @@ class UserServiceTest {
 
         UserDto dto = userService.getUserById(user.getId());
 
-        assertEquals(dto.getId(), user.getId());
-        assertEquals(dto.getName(), user.getName());
-        assertEquals(dto.getEmail(), user.getEmail());
+        assertEquals(user.getId(), dto.getId());
+        assertEquals(user.getName(), dto.getName());
+        assertEquals(user.getEmail(), dto.getEmail());
 
         Mockito.verify(userRepository, Mockito.times(1)).findById(user.getId());
     }
@@ -57,8 +57,8 @@ class UserServiceTest {
             userService.getUserById(userId);
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = "Пользователь не найден";
+        String expectedMessage = "Пользователь не найден";
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
     }
@@ -81,9 +81,9 @@ class UserServiceTest {
         UserDto dto = UserMapper.mapToUserDto(user);
         UserDto savedDto = userService.saveUser(dto);
 
-        assertEquals(savedDto.getId(), dto.getId());
-        assertEquals(savedDto.getName(), dto.getName());
-        assertEquals(savedDto.getEmail(), dto.getEmail());
+        assertEquals(dto.getId(), savedDto.getId());
+        assertEquals(dto.getName(), savedDto.getName());
+        assertEquals(dto.getEmail(), savedDto.getEmail());
 
         Mockito.verify(userRepository, Mockito.times(1)).save(Mockito.any());
     }
@@ -96,9 +96,9 @@ class UserServiceTest {
         UserDto dto = UserMapper.mapToUserDto(newUser);
         UserDto savedUser = userService.updateUser(newUser.getId(), dto);
 
-        assertEquals(savedUser.getId(), newUser.getId());
-        assertEquals(savedUser.getName(), newUser.getName());
-        assertEquals(savedUser.getEmail(), newUser.getEmail());
+        assertEquals(newUser.getId(), savedUser.getId());
+        assertEquals(newUser.getName(), savedUser.getName());
+        assertEquals(newUser.getEmail(), savedUser.getEmail());
 
         Mockito.verify(userRepository, Mockito.times(1)).findById(user.getId());
     }
@@ -113,8 +113,8 @@ class UserServiceTest {
             userService.updateUser(userId, dto);
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = "Пользователь не найден";
+        String expectedMessage = "Пользователь не найден";
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
     }
@@ -135,8 +135,8 @@ class UserServiceTest {
             userService.deleteUser(userId);
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Пользователь с id=%d не найден!", userId);
+        String expectedMessage = String.format("Пользователь с id=%d не найден!", userId);
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
     }

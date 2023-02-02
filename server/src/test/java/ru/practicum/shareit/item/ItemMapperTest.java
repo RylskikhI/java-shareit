@@ -40,17 +40,17 @@ class ItemMapperTest {
     void mapToItemDtoByRequest(ItemRequest request) {
         ItemDto dto = request == null ? ItemMapper.mapToItemDto(ITEM) : ItemMapper.mapToItemDto(ITEM, request);
 
-        assertEquals(dto.getId(), ITEM.getId());
-        assertEquals(dto.getName(), ITEM.getName());
+        assertEquals(ITEM.getId(), dto.getId());
+        assertEquals(ITEM.getName(), dto.getName());
 
         if (request == null) {
             assertNull(dto.getDescription());
             assertNull(dto.getAvailable());
             assertNull(dto.getRequestId());
         } else {
-            assertEquals(dto.getDescription(), ITEM.getDescription());
-            assertEquals(dto.getAvailable(), ITEM.getAvailable());
-            assertEquals(dto.getRequestId(), ITEM.getRequest().getId());
+            assertEquals(ITEM.getDescription(), dto.getDescription());
+            assertEquals(ITEM.getAvailable(), dto.getAvailable());
+            assertEquals(ITEM.getRequest().getId(), dto.getRequestId());
         }
     }
 
@@ -61,10 +61,10 @@ class ItemMapperTest {
                 ItemMapper.mapToItemDto(ITEM, comments) :
                 ItemMapper.mapToItemDto(ITEM, lastBooking, nextBooking, comments);
 
-        assertEquals(dto.getId(), ITEM.getId());
-        assertEquals(dto.getName(), ITEM.getName());
-        assertEquals(dto.getDescription(), ITEM.getDescription());
-        assertEquals(dto.getAvailable(), ITEM.getAvailable());
+        assertEquals(ITEM.getId(), dto.getId());
+        assertEquals(ITEM.getName(), dto.getName());
+        assertEquals(ITEM.getDescription(), dto.getDescription());
+        assertEquals(ITEM.getAvailable(), dto.getAvailable());
 
         if (lastBooking == null && nextBooking == null) {
             assertNull(dto.getLastBooking());
@@ -82,16 +82,16 @@ class ItemMapperTest {
     void mapToItem(ItemRequest request) {
         Item item = ItemMapper.mapToItem(DTO, OWNER, request);
 
-        assertEquals(item.getId(), DTO.getId());
-        assertEquals(item.getName(), DTO.getName());
-        assertEquals(item.getDescription(), DTO.getDescription());
-        assertEquals(item.getAvailable(), DTO.getAvailable());
-        assertEquals(item.getOwner(), OWNER);
+        assertEquals(DTO.getId(), item.getId());
+        assertEquals(DTO.getName(), item.getName());
+        assertEquals(DTO.getDescription(), item.getDescription());
+        assertEquals(DTO.getAvailable(), item.getAvailable());
+        assertEquals(OWNER, item.getOwner());
 
         if (request == null) {
             assertNull(item.getRequest());
         } else {
-            assertEquals(item.getRequest(), REQUEST);
+            assertEquals(REQUEST, item.getRequest());
         }
     }
 

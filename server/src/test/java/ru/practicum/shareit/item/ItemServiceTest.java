@@ -106,10 +106,10 @@ class ItemServiceTest {
 
         ItemDto dto = itemService.getItemById(owner.getId(), item.getId());
 
-        assertEquals(dto.getId(), item.getId());
-        assertEquals(dto.getName(), item.getName());
-        assertEquals(dto.getDescription(), item.getDescription());
-        assertEquals(dto.getAvailable(), item.getAvailable());
+        assertEquals(item.getId(), dto.getId());
+        assertEquals(item.getName(), dto.getName());
+        assertEquals(item.getDescription(), dto.getDescription());
+        assertEquals(item.getAvailable(), dto.getAvailable());
 
         if (lastBooking == null || nextBooking == null) {
             assertNull(dto.getLastBooking());
@@ -139,8 +139,8 @@ class ItemServiceTest {
             itemService.getItemById(userId, item.getId());
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Пользователь с id=%d не найден!", userId);
+        String expectedMessage = String.format("Пользователь с id=%d не найден!", userId);
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
     }
@@ -154,8 +154,8 @@ class ItemServiceTest {
             itemService.getItemById(owner.getId(), id);
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Вещь с id=%d не найдена!", id);
+        String expectedMessage = String.format("Вещь с id=%d не найдена!", id);
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
 
@@ -187,7 +187,7 @@ class ItemServiceTest {
 
         List<ItemDto> items = itemService.getItems(owner.getId(), 0, 10);
 
-        assertEquals(items.size(), 1);
+        assertEquals(1, items.size());
 
         Mockito.verify(userRepository, Mockito.times(1)).findById(owner.getId());
         Mockito.verify(itemRepository, Mockito.times(1)).findAllByOwnerId(owner.getId(), pageable);
@@ -199,8 +199,8 @@ class ItemServiceTest {
             itemService.getItems(owner.getId(), 0, 10);
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Пользователь с id=%d не найден!", owner.getId());
+        String expectedMessage = String.format("Пользователь с id=%d не найден!", owner.getId());
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
     }
@@ -232,8 +232,8 @@ class ItemServiceTest {
             itemService.addNewItem(owner.getId(), dto);
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Пользователь с id=%d не найден!", owner.getId());
+        String expectedMessage = String.format("Пользователь с id=%d не найден!", owner.getId());
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
     }
@@ -247,8 +247,8 @@ class ItemServiceTest {
             itemService.addNewItem(owner.getId(), dto);
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Item request with id=%d not found!", request.getId());
+        String expectedMessage = String.format("Item request with id=%d not found!", request.getId());
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
 
@@ -272,10 +272,10 @@ class ItemServiceTest {
         ItemDto dto = ItemMapper.mapToItemDto(newItem, request);
         ItemDto savedItem = itemService.updateItem(dto, owner.getId(), newItem.getId());
 
-        assertEquals(savedItem.getId(), newItem.getId());
-        assertEquals(savedItem.getName(), newItem.getName());
-        assertEquals(savedItem.getDescription(), newItem.getDescription());
-        assertEquals(savedItem.getAvailable(), newItem.getAvailable());
+        assertEquals(newItem.getId(), savedItem.getId());
+        assertEquals(newItem.getName(), savedItem.getName());
+        assertEquals(newItem.getDescription(), savedItem.getDescription());
+        assertEquals(newItem.getAvailable(), savedItem.getAvailable());
 
         Mockito.verify(userRepository, Mockito.times(1)).findById(owner.getId());
         Mockito.verify(itemRepository, Mockito.times(1)).findById(item.getId());
@@ -288,8 +288,8 @@ class ItemServiceTest {
             itemService.updateItem(dto, owner.getId(), dto.getId());
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Пользователь с id=%d не найден!", owner.getId());
+        String expectedMessage = String.format("Пользователь с id=%d не найден!", owner.getId());
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
     }
@@ -303,8 +303,8 @@ class ItemServiceTest {
             itemService.updateItem(dto, owner.getId(), dto.getId());
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Вещь с id=%d не найдена!", item.getId());
+        String expectedMessage = String.format("Вещь с id=%d не найдена!", item.getId());
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
 
@@ -330,8 +330,8 @@ class ItemServiceTest {
             itemService.updateItem(dto, requestor.getId(), newItem.getId());
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("У пользователя c id=%d отсутствуют права на изменение вещи!", requestor.getId());
+        String expectedMessage = String.format("У пользователя c id=%d отсутствуют права на изменение вещи!", requestor.getId());
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
 
@@ -357,8 +357,8 @@ class ItemServiceTest {
             itemService.deleteItem(userId, item.getId());
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Пользователь с id=%d не найден!", userId);
+        String expectedMessage = String.format("Пользователь с id=%d не найден!", userId);
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
     }
@@ -372,8 +372,8 @@ class ItemServiceTest {
             itemService.deleteItem(owner.getId(), id);
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Вещь с id=%d не найдена!", id);
+        String expectedMessage = String.format("Вещь с id=%d не найдена!", id);
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
 
@@ -409,8 +409,8 @@ class ItemServiceTest {
             itemService.addComment(dto, owner.getId(), item.getId());
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Пользователь с id=%d не найден!", owner.getId());
+        String expectedMessage = String.format("Пользователь с id=%d не найден!", owner.getId());
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
     }
@@ -424,8 +424,8 @@ class ItemServiceTest {
             itemService.addComment(dto, owner.getId(), item.getId());
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Вещь с id=%d не найдена!", item.getId());
+        String expectedMessage = String.format("Вещь с id=%d не найдена!", item.getId());
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
 

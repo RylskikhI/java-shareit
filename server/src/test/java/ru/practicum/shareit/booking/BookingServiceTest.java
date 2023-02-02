@@ -77,10 +77,10 @@ class BookingServiceTest {
 
         BookingDtoWithEntities dto = bookingService.findBookingById(owner.getId(), booking.getId());
 
-        assertEquals(dto.getId(), booking.getId());
-        assertEquals(dto.getStart(), booking.getStart());
-        assertEquals(dto.getEnd(), booking.getEnd());
-        assertEquals(dto.getStatus(), booking.getStatus());
+        assertEquals(booking.getId(), dto.getId());
+        assertEquals(booking.getStart(), dto.getStart());
+        assertEquals(booking.getEnd(), dto.getEnd());
+        assertEquals(booking.getStatus(), dto.getStatus());
         assertNotNull(dto.getItem().getId());
         assertNotNull(dto.getBooker());
 
@@ -95,8 +95,8 @@ class BookingServiceTest {
             bookingService.findBookingById(userId, booking.getId());
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Пользователь с id=%d не найден!", userId);
+        String expectedMessage = String.format("Пользователь с id=%d не найден!", userId);
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
     }
@@ -110,8 +110,8 @@ class BookingServiceTest {
             bookingService.findBookingById(owner.getId(), id);
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Бронирование с id=%d не найдено!", id);
+        String expectedMessage = String.format("Бронирование с id=%d не найдено!", id);
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
 
@@ -128,8 +128,8 @@ class BookingServiceTest {
             bookingService.findBookingById(userId, booking.getId());
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Пользователь с id=%d не имеет прав на осуществление данного запроса!", userId);
+        String expectedMessage = String.format("Пользователь с id=%d не имеет прав на осуществление данного запроса!", userId);
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
 
@@ -144,8 +144,8 @@ class BookingServiceTest {
             bookingService.findAllByBookerId(userId, BookingState.ALL.name(), 0, 10);
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Пользователь с id=%d не найден!", userId);
+        String expectedMessage = String.format("Пользователь с id=%d не найден!", userId);
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
     }
@@ -159,8 +159,8 @@ class BookingServiceTest {
             bookingService.findAllByBookerId(booker.getId(), state, 0, 10);
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = "Unknown state: UNSUPPORTED_STATUS";
+        String expectedMessage = "Unknown state: UNSUPPORTED_STATUS";
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
 
@@ -174,8 +174,8 @@ class BookingServiceTest {
             bookingService.findAllByItemOwnerId(userId, BookingState.ALL.name(), 0, 10);
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Пользователь с id=%d не найден!", userId);
+        String expectedMessage = String.format("Пользователь с id=%d не найден!", userId);
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
     }
@@ -189,9 +189,9 @@ class BookingServiceTest {
         BookingDto dto = BookingMapper.mapToBookingDtoWithIds(booking);
         BookingDtoWithEntities savedDto = bookingService.createBooking(dto.getBookerId(), dto);
 
-        assertEquals(savedDto.getId(), dto.getId());
-        assertEquals(savedDto.getStart(), dto.getStart());
-        assertEquals(savedDto.getEnd(), dto.getEnd());
+        assertEquals(dto.getId(), savedDto.getId());
+        assertEquals(dto.getStart(), savedDto.getStart());
+        assertEquals(dto.getEnd(), savedDto.getEnd());
         assertNotNull(savedDto.getItem());
         assertNotNull(savedDto.getBooker());
 
@@ -210,8 +210,8 @@ class BookingServiceTest {
             bookingService.createBooking(owner.getId(), dto);
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Пользователь с userId=%d является владельцем данной вещи!", owner.getId());
+        String expectedMessage = String.format("Пользователь с userId=%d является владельцем данной вещи!", owner.getId());
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
 
@@ -230,8 +230,8 @@ class BookingServiceTest {
             bookingService.createBooking(booker.getId(), dto);
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Вещь available=%b, бронирование отклонено!", item.getAvailable());
+        String expectedMessage = String.format("Вещь available=%b, бронирование отклонено!", item.getAvailable());
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
 
@@ -246,8 +246,8 @@ class BookingServiceTest {
             bookingService.createBooking(booker.getId(), dto);
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Пользователь с id=%d не найден!", booker.getId());
+        String expectedMessage = String.format("Пользователь с id=%d не найден!", booker.getId());
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
     }
@@ -261,8 +261,8 @@ class BookingServiceTest {
             bookingService.createBooking(dto.getBookerId(), dto);
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Вещь с id=%d не найдена!", item.getId());
+        String expectedMessage = String.format("Вещь с id=%d не найдена!", item.getId());
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
 
@@ -278,14 +278,14 @@ class BookingServiceTest {
 
         BookingDtoWithEntities savedBooking = bookingService.updateBooking(owner.getId(), booking.getId(), approved);
 
-        assertEquals(savedBooking.getId(), booking.getId());
-        assertEquals(savedBooking.getStart(), booking.getStart());
-        assertEquals(savedBooking.getEnd(), booking.getEnd());
+        assertEquals(booking.getId(), savedBooking.getId());
+        assertEquals(booking.getStart(), savedBooking.getStart());
+        assertEquals(booking.getEnd(), savedBooking.getEnd());
 
         if (approved && booking.getStatus() == BookingStatus.WAITING) {
-            assertEquals(savedBooking.getStatus(), BookingStatus.APPROVED);
+            assertEquals(BookingStatus.APPROVED, savedBooking.getStatus());
         } else if (booking.getStatus() == BookingStatus.WAITING) {
-            assertEquals(savedBooking.getStatus(), BookingStatus.REJECTED);
+            assertEquals(BookingStatus.REJECTED, savedBooking.getStatus());
         }
 
         Mockito.verify(userRepository, times(1)).findById(owner.getId());
@@ -300,8 +300,8 @@ class BookingServiceTest {
             bookingService.updateBooking(userId, booking.getId(), false);
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Пользователь с id=%d не найден!", userId);
+        String expectedMessage = String.format("Пользователь с id=%d не найден!", userId);
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
     }
@@ -316,8 +316,8 @@ class BookingServiceTest {
             bookingService.updateBooking(booker.getId(), booking.getId(), false);
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Пользователь с userId=%d не является владельцем данной вещи!", booker.getId());
+        String expectedMessage = String.format("Пользователь с userId=%d не является владельцем данной вещи!", booker.getId());
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
 
@@ -335,8 +335,8 @@ class BookingServiceTest {
             bookingService.updateBooking(owner.getId(), booking.getId(), false);
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Вещь с id=%d не найдена!", item.getId());
+        String expectedMessage = String.format("Вещь с id=%d не найдена!", item.getId());
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
 
@@ -352,8 +352,8 @@ class BookingServiceTest {
             bookingService.updateBooking(owner.getId(), booking.getId(), false);
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Бронирование с id=%d не найдено!", booking.getId());
+        String expectedMessage = String.format("Бронирование с id=%d не найдено!", booking.getId());
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
 
@@ -377,8 +377,8 @@ class BookingServiceTest {
             bookingService.deleteBookingById(booker.getId(), booking.getId());
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Пользователь с id=%d не найден!", booker.getId());
+        String expectedMessage = String.format("Пользователь с id=%d не найден!", booker.getId());
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
     }
@@ -391,8 +391,8 @@ class BookingServiceTest {
             bookingService.deleteBookingById(booker.getId(), booking.getId());
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Бронирование с id=%d не найдено!", booking.getId());
+        String expectedMessage = String.format("Бронирование с id=%d не найдено!", booking.getId());
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
 
@@ -409,8 +409,8 @@ class BookingServiceTest {
             bookingService.deleteBookingById(userId, booking.getId());
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Пользователь с id=%d не имеет права на удаление!", userId);
+        String expectedMessage = String.format("Пользователь с id=%d не имеет права на удаление!", userId);
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
 
@@ -462,7 +462,7 @@ class BookingServiceTest {
 
         List<BookingDtoWithEntities> bookings = bookingService.findAllByBookerId(booker.getId(), state.name(), 0, 10);
 
-        assertEquals(bookings.size(), 1);
+        assertEquals(1, bookings.size());
     }
 
     @ParameterizedTest
@@ -509,6 +509,6 @@ class BookingServiceTest {
 
         List<BookingDtoWithEntities> bookings = bookingService.findAllByItemOwnerId(owner.getId(), state.name(), 0, 10);
 
-        assertEquals(bookings.size(), 1);
+        assertEquals(1, bookings.size());
     }
 }

@@ -93,7 +93,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public ItemRequestDto getRequestById(Long userId, Long requestId) {
-        final User user = userRepository.findById(userId).orElseThrow(
+        userRepository.findById(userId).orElseThrow(
                 () -> new UserNotFoundException(String.format("User with id=%d not found!", userId))
         );
         final ItemRequest request = itemRequestRepository.findById(requestId).orElseThrow(
@@ -106,7 +106,7 @@ public class RequestServiceImpl implements RequestService {
     @Override
     @Transactional
     public void deleteById(Long userId, Long id) {
-        final User user = userRepository.findById(userId).orElseThrow(
+        userRepository.findById(userId).orElseThrow(
                 () -> new UserNotFoundException(String.format("User with id=%d not found!", userId))
         );
         final ItemRequest request = itemRequestRepository.findById(id).orElseThrow(

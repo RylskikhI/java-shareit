@@ -78,7 +78,7 @@ public class UserDbTest {
 
     @Test
     void saveNewUserByEmailExists() {
-        UserDto dto = makeUser(user);
+        makeUser(user);
         DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> {
             makeUser(user);
         });
@@ -116,8 +116,8 @@ public class UserDbTest {
             userService.getUserById(id);
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = "Пользователь не найден";
+        String expectedMessage = "Пользователь не найден";
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
     }

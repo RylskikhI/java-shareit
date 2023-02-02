@@ -15,4 +15,9 @@ public class MyPageRequest extends PageRequest {
     public long getOffset() {
         return from;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
 }

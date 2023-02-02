@@ -17,7 +17,6 @@ import org.springframework.data.domain.Sort;
 import ru.practicum.shareit.exception.ItemNotFoundException;
 import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.item.repository.ItemRepository;
-import ru.practicum.shareit.request.MyPageRequest;
 import ru.practicum.shareit.request.mapper.ItemRequestMapper;
 import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.request.service.RequestServiceImpl;
@@ -77,10 +76,10 @@ class ItemRequestServiceTest {
 
         ItemRequestDto dto = requestService.getRequestById(owner.getId(), request.getId());
 
-        assertEquals(dto.getId(), request.getId());
-        assertEquals(dto.getDescription(), request.getDescription());
-        assertEquals(dto.getCreated(), request.getCreated());
-        assertEquals(dto.getItems().size(), 1);
+        assertEquals(request.getId(), dto.getId());
+        assertEquals(request.getDescription(), dto.getDescription());
+        assertEquals(request.getCreated(), dto.getCreated());
+        assertEquals(1, dto.getItems().size());
 
         Mockito.verify(userRepository, Mockito.times(1)).findById(owner.getId());
         Mockito.verify(requestRepository, Mockito.times(1)).findById(request.getId());
@@ -94,8 +93,8 @@ class ItemRequestServiceTest {
             requestService.getRequestById(userId, request.getId());
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("User with id=%d not found!", userId);
+        String expectedMessage = String.format("User with id=%d not found!", userId);
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
     }
@@ -109,8 +108,8 @@ class ItemRequestServiceTest {
             requestService.getRequestById(owner.getId(), id);
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Item request with id=%d not found!", id);
+        String expectedMessage = String.format("Item request with id=%d not found!", id);
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
 
@@ -124,7 +123,7 @@ class ItemRequestServiceTest {
 
         List<ItemRequestDto> requests = requestService.getRequestsMadeByOwner(requestor.getId());
 
-        assertEquals(requests.size(), 1);
+        assertEquals(1, requests.size());
 
         Mockito.verify(userRepository, Mockito.times(1)).findById(requestor.getId());
         Mockito.verify(requestRepository, Mockito.times(2)).findAllByRequestorId(requestor.getId());
@@ -137,8 +136,8 @@ class ItemRequestServiceTest {
             requestService.getRequestsMadeByOwner(userId);
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("User with id=%d not found!", userId);
+        String expectedMessage = String.format("User with id=%d not found!", userId);
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
     }
@@ -151,7 +150,7 @@ class ItemRequestServiceTest {
 
         List<ItemRequestDto> requests = requestService.getRequestsMadeByOthers(owner.getId(), 0, 10);
 
-        assertEquals(requests.size(), 1);
+        assertEquals(1, requests.size());
 
         Mockito.verify(userRepository, Mockito.times(1)).findById(owner.getId());
         Mockito.verify(requestRepository, Mockito.times(2)).findAllByRequestorIdNot(owner.getId(), pageRequest);
@@ -164,8 +163,8 @@ class ItemRequestServiceTest {
             requestService.getRequestsMadeByOthers(userId, 0, 10);
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("User with id=%d not found!", userId);
+        String expectedMessage = String.format("User with id=%d not found!", userId);
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
     }
@@ -196,8 +195,8 @@ class ItemRequestServiceTest {
             requestService.addNewRequest(userId, dto);
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Пользователь с id=%d не найден!", userId);
+        String expectedMessage = String.format("Пользователь с id=%d не найден!", userId);
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
     }
@@ -220,8 +219,8 @@ class ItemRequestServiceTest {
             requestService.deleteById(userId, request.getId());
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("User with id=%d not found!", userId);
+        String expectedMessage = String.format("User with id=%d not found!", userId);
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
     }
@@ -235,8 +234,8 @@ class ItemRequestServiceTest {
             requestService.deleteById(owner.getId(), id);
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Item request with id=%d not found!", id);
+        String expectedMessage = String.format("Item request with id=%d not found!", id);
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
 

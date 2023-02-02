@@ -120,7 +120,7 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     @Override
     public void deleteItem(long userId, long itemId) {
-        final User user = userRepository.findById(userId).orElseThrow(
+        userRepository.findById(userId).orElseThrow(
                 () -> new UserNotFoundException(String.format("Пользователь с id=%d не найден!", userId))
         );
         final Item item = itemRepository.findById(itemId).orElseThrow(

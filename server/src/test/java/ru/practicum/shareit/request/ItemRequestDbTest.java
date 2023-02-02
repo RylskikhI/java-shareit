@@ -60,7 +60,7 @@ public class ItemRequestDbTest {
         assertThat(dto.getId()).isNotNull();
         assertThat(dto.getDescription()).isEqualTo(request.getDescription());
         assertThat(dto.getCreated()).isBefore(LocalDateTime.now());
-        assertThat(dto.getItems().size()).isEqualTo(0);
+        assertThat(dto.getItems().size()).isZero();
     }
 
     @Test
@@ -118,8 +118,8 @@ public class ItemRequestDbTest {
             requestService.getRequestById(requestor.getId(), id);
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Item request with id=%d not found!", id);
+        String expectedMessage = String.format("Item request with id=%d not found!", id);
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
     }

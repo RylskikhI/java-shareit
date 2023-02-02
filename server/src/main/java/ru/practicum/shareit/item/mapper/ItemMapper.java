@@ -9,7 +9,6 @@ import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
 import javax.validation.constraints.NotNull;
-import java.util.Collections;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
@@ -22,7 +21,7 @@ public class ItemMapper {
                 .name(item.getName())
                 .description(item.getDescription())
                 .available(item.getAvailable())
-                .comments(comments == null ? Collections.emptySet() : comments.stream()
+                .comments(comments.stream()
                         .map(CommentMapper::mapToCommentInfoDto)
                         .collect(toSet()))
                 .build();
@@ -39,7 +38,7 @@ public class ItemMapper {
                 .available(item.getAvailable())
                 .lastBooking(BookingMapper.mapToBookingDtoWithIds(lastBooking))
                 .nextBooking(BookingMapper.mapToBookingDtoWithIds(nextBooking))
-                .comments(comments == null ? Collections.emptySet() : comments.stream()
+                .comments(comments.stream()
                         .map(CommentMapper::mapToCommentInfoDto)
                         .collect(toSet()))
                 .build();

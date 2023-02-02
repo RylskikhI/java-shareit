@@ -29,21 +29,21 @@ class BookingMapperTest {
     void mapToBookingDto() {
         BookingDto dto = BookingMapper.mapToBookingDtoWithIds(BOOKING);
 
-        assertEquals(dto.getId(), BOOKING.getId());
-        assertEquals(dto.getStart(), BOOKING.getStart());
-        assertEquals(dto.getEnd(), BOOKING.getEnd());
-        assertEquals(dto.getItemId(), ITEM.getId());
-        assertEquals(dto.getBookerId(), BOOKER.getId());
+        assertEquals(BOOKING.getId(), dto.getId());
+        assertEquals(BOOKING.getStart(), dto.getStart());
+        assertEquals(BOOKING.getEnd(), dto.getEnd());
+        assertEquals(ITEM.getId(), dto.getItemId());
+        assertEquals(BOOKER.getId(), dto.getBookerId());
     }
 
     @Test
     void mapToBookingDtoWithEntities() {
         BookingDtoWithEntities dto = BookingMapper.mapToBookingDtoWithEntities(BOOKING);
 
-        assertEquals(dto.getId(), BOOKING.getId());
-        assertEquals(dto.getStart(), BOOKING.getStart());
-        assertEquals(dto.getEnd(), BOOKING.getEnd());
-        assertEquals(dto.getStatus(), BOOKING.getStatus());
+        assertEquals(BOOKING.getId(), dto.getId());
+        assertEquals(BOOKING.getStart(), dto.getStart());
+        assertEquals(BOOKING.getEnd(), dto.getEnd());
+        assertEquals(BOOKING.getStatus(), dto.getStatus());
         assertNotNull(dto.getItem());
         assertNotNull(dto.getBooker());
     }
@@ -52,10 +52,10 @@ class BookingMapperTest {
     void mapToBooking() {
         Booking booking = BookingMapper.mapToBooking(DTO, BookingStatus.WAITING, ITEM, BOOKER);
 
-        assertEquals(booking.getId(), DTO.getId());
-        assertEquals(booking.getStart(), DTO.getStart());
-        assertEquals(booking.getEnd(), DTO.getEnd());
-        assertEquals(booking.getItem().getId(), DTO.getItemId());
-        assertEquals(booking.getBooker().getId(), DTO.getBookerId());
+        assertEquals(DTO.getId(), booking.getId());
+        assertEquals(DTO.getStart(), booking.getStart());
+        assertEquals(DTO.getEnd(), booking.getEnd());
+        assertEquals(DTO.getItemId(), booking.getItem().getId());
+        assertEquals(DTO.getBookerId(), booking.getBooker().getId());
     }
 }

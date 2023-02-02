@@ -84,7 +84,7 @@ public class ItemDbTest {
 
     @Test
     void getAllItems() {
-        ItemDto dto = makeItem(item);
+        makeItem(item);
         TypedQuery<Item> query = em.createQuery("select i from Item as i where i.owner.id = :id", Item.class);
         List<Item> result = query
                 .setParameter("id", owner.getId())
@@ -97,7 +97,7 @@ public class ItemDbTest {
 
     @Test
     void search() {
-        ItemDto dto = makeItem(item);
+        makeItem(item);
         Pageable pageable = PageRequest.of(0, 10);
         String text = "Saw";
         TypedQuery<Item> query = em.createQuery("select i from Item as i where i.available = true and " +
@@ -168,8 +168,8 @@ public class ItemDbTest {
             itemService.deleteItem(owner.getId(), id);
         });
 
-        String expectedMessage = exception.getMessage();
-        String actualMessage = String.format("Вещь с id=%d не найдена!", id);
+        String expectedMessage = String.format("Вещь с id=%d не найдена!", id);
+        String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
     }

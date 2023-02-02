@@ -27,19 +27,19 @@ class CommentMapperTest {
     void mapToCommentInfoDto() {
         CommentWithInfoDto dto = CommentMapper.mapToCommentInfoDto(COMMENT);
 
-        assertEquals(dto.getId(), COMMENT.getId());
-        assertEquals(dto.getText(), COMMENT.getText());
-        assertEquals(dto.getAuthorName(), COMMENT.getAuthor().getName());
-        assertEquals(dto.getCreated(), COMMENT.getCreated());
+        assertEquals(COMMENT.getId(), dto.getId());
+        assertEquals(COMMENT.getText(), dto.getText());
+        assertEquals(COMMENT.getAuthor().getName(), dto.getAuthorName());
+        assertEquals(COMMENT.getCreated(), dto.getCreated());
     }
 
     @Test
     void mapToComment() {
         Comment comment = CommentMapper.mapToComment(DTO, ITEM, AUTHOR);
 
-        assertEquals(comment.getId(), DTO.getId());
-        assertEquals(comment.getText(), DTO.getText());
-        assertEquals(comment.getItem(), ITEM);
-        assertEquals(comment.getAuthor(), AUTHOR);
+        assertEquals(DTO.getId(), comment.getId());
+        assertEquals(DTO.getText(), comment.getText());
+        assertEquals(ITEM, comment.getItem());
+        assertEquals(AUTHOR, comment.getAuthor());
     }
 }
